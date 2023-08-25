@@ -64,7 +64,7 @@ public class ConfigHandler {
         if (keyExists(key)) {
             return cfg.getInt(key);
         }
-        return 1;
+        return 0;
     }
 
     public String getString(String key) {

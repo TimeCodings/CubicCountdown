@@ -65,7 +65,7 @@ public class DataHandler {
         if (keyExists(key)) {
             return cfg.getInt(key);
         }
-        return null;
+        return 0;
     }
 
     public Location getLocation(String key) {
