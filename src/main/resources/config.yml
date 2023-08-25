@@ -1,0 +1,65 @@
+###############################
+#    CubicCountdown v1.0.0    #
+#     made by TimeCoding      #
+######################################################
+#    Support: https://discord.tikmc.de/              #
+#    Donate: https://buymeacoffee.com/timecoding/    #
+######################################################
+
+#The countdown in seconds
+Countdown: 10
+#The general sound and title settings
+Settings:
+  #Title and sound settings for the first second of the countdown
+  START:
+    Title: "&a&lThe game ends"
+    Subtitle: ""
+    #You can find all sounds here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
+    Sound: ENTITY_FIREWORK_ROCKET_SHOOT
+  #Title format and sound settings for the countdown in general
+  PROCEED:
+    Title: "&e&l%seconds%"
+    Subtitle: ""
+    #You can find all sounds here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
+    Sound: BLOCK_NOTE_BLOCK_BASS
+  #Title and sound settings which will be applied when the cube state turns from "FULL CUBE" to "PARTLY FULL CUBE"
+  CANCELLED:
+    Title: "&c&lCountdown cancelled!"
+    Subtitle: ""
+    #You can find all sounds here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
+    Sound: BLOCK_NOTE_BLOCK_BANJO
+  #Title and sound settings for the countdown ending
+  END:
+    Title: "&a&lG&b&la&c&lm&d&le &f&le&4&ln&2&ld&d&le&b&ld&f&l!"
+    Subtitle: "&cWins: %win_counter%"
+    #You can find all sounds here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
+    Sound: ENTITY_PLAYER_LEVELUP
+#Decide if all blocks in the cube, after the countdown reached 0, should be deleted/cleared
+ClearCube:
+  Enabled: true
+  #Decide if some block-"types" should be disabled
+  #You can find all block-names here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+  DisabledBlocks:
+    - BEDROCK
+#The delay between the countdown and the start title (the start title will only be shown if the delay is => 20) IN TICKS
+# INFORMATION: 20 ticks = 1 second #
+StartDelayInTicks: 20
+#Configurate the firework effect on the end of the countdown
+Firework:
+  #Enable it by setting it to "true"
+  Enabled: true
+  #Set the power of the effect (1-Unlimited)
+  Power: 1
+  #Set the colors of the firework
+  #You can find all color-names here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Color.html
+  Colors:
+    - "RED"
+    - "ORANGE"
+    - "YELLOW"
+
+#DO NOT CHANGE THIS
+config-version: 1.0.0
+
+#######################################################################################
+# A SETTING IS MISSING FOR YOU? NO PROBLEM, JOIN OUR DISCORD AND WE'LL ADD IT FOR YOU #
+#######################################################################################

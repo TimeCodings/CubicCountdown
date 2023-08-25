@@ -1,0 +1,11 @@
+name: CubicCountdown
+version: 1.0.0-BETA
+main: de.timecoding.cc.CubicCountdown
+api-version: 1.13
+description: "A plugin which is able to start a countdown when a cube is full of blocks"
+
+commands:
+  cubiccountdown:
+    aliases:
+      - cc
+    description: "A command which allows players to do the CubicCountdown setup"
