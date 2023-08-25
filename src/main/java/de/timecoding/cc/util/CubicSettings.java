@@ -40,6 +40,7 @@ public class CubicSettings {
             setStartDelay(configHandler.getInteger("StartDelayInTicks"));
             Arrays.stream(CubicStateType.values()).forEach(cubicStateType -> {
                 setTitle(cubicStateType, configHandler.getString("Settings." + cubicStateType.toString().toUpperCase() + ".Title"));
+                setSubtitle(cubicStateType, configHandler.getString("Settings." + cubicStateType.toString().toUpperCase() + ".Subtitle"));
                 String soundString = configHandler.getString("Settings." + cubicStateType.toString().toUpperCase() + ".Sound");
                 Sound sound = getSoundFromString(soundString);
                 if (sound != null) {
