@@ -129,7 +129,11 @@ public class CubicSettings {
     }
 
     public String getTitle(CubicStateType cubicStateType) {
-        return getTitleMap().get(cubicStateType).replace("%win_counter%", plugin.getWins(cube).toString()).replace("%lose_counter%", plugin.getLoses(cube).toString());
+        if(hasTitle(cubicStateType)) {
+            return getTitleMap().get(cubicStateType).replace("%win_counter%", plugin.getWins(cube).toString()).replace("%lose_counter%", plugin.getLoses(cube).toString());
+        }else{
+            return "";
+        }
     }
 
     public void setTitle(CubicStateType cubicStateType, String string) {
@@ -145,7 +149,11 @@ public class CubicSettings {
     }
 
     public String getSubtitle(CubicStateType cubicStateType) {
-        return getSubTitleMap().get(cubicStateType).replace("%win_counter%", plugin.getWins(cube).toString()).replace("%lose_counter%", plugin.getLoses(cube).toString());
+        if(hasSubtitle(cubicStateType)) {
+            return getSubTitleMap().get(cubicStateType).replace("%win_counter%", plugin.getWins(cube).toString()).replace("%lose_counter%", plugin.getLoses(cube).toString());
+        }else{
+            return "";
+        }
     }
 
     public void setSubtitle(CubicStateType cubicStateType, String string) {
