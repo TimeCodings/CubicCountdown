@@ -106,8 +106,8 @@ public class CountdownModule {
     public void stop() {
         if (isRunning()) {
             Bukkit.getScheduler().cancelTask(this.countdownId);
-            this.countdownId = -1;
             plugin.getCountdownList().remove(this);
+            this.countdownId = -1;
         }
     }
 

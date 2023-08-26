@@ -78,9 +78,21 @@ public class CubicListener implements Listener {
         if (atomicCube.get() != null && atomicCube.get().filledOut() && !breakBlock) {
             CubicSettings cubicSettings = new CubicSettings(plugin, true);
             cubicSettings.setCube(atomicCube.get());
-            if (player != null) {
+            if(plugin.getConfigHandler().getBoolean("Viewer.AllPlayers")){
+                Bukkit.getOnlinePlayers().forEach(onlinePlayer -> cubicSettings.addPlayer(onlinePlayer));
+            }else if(plugin.getConfigHandler().getBoolean("Viewer.AllPlayersInCubeRadius.Enabled")){
+                atomicCube.get().blockList(true).forEach(block -> {
+                    Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
+                        if(block.getLocation().distance(onlinePlayer.getLocation()) < plugin.getConfigHandler().getInteger("Viewer.AllPlayersInCubeRadius.RadiusInBlocks")){
+                            cubicSettings.addPlayer(onlinePlayer);
+                        }
+                    });
+                });
+            }
+            if (player != null && !cubicSettings.playerList().contains(player)) {
                 cubicSettings.addPlayer(player);
             }
+
             CountdownModule countdownModule = new CountdownModule(cubicSettings);
             CubeFilledOutEvent event = new CubeFilledOutEvent(player, countdownModule);
             Bukkit.getPluginManager().callEvent(event);

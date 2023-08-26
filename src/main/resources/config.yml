@@ -44,6 +44,16 @@ ClearCube:
 #The delay between the countdown and the start title (the start title will only be shown if the delay is => 20) IN TICKS
 # INFORMATION: 20 ticks = 1 second #
 StartDelayInTicks: 20
+#Normally only the player who breaked the block can see the countdown, but you can change it here
+Viewer:
+  #Include all online players
+  #THIS OPTION MIGHT BREAK OTHER RUNNING COUNTDOWNS IF SET TO TRUE
+  AllPlayers: false
+  #Include players which are in a specific radius of a cube
+  #THIS OPTION MIGHT BREAK OTHER RUNNING COUNTDOWNS IF SET TO TRUE
+  AllPlayersInCubeRadius:
+    Enabled: false
+    RadiusInBlocks: 10
 #Configurate the firework effect on the end of the countdown
 Firework:
   #Enable it by setting it to "true"
