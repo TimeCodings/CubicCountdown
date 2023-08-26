@@ -70,9 +70,6 @@ public class ConfigHandler {
     public String getString(String key) {
         if (keyExists(key)) {
             return ChatColor.translateAlternateColorCodes('&', cfg.getString(key));
-        } else {
-            cfg.set(key, key);
-            save();
         }
         return "";
     }

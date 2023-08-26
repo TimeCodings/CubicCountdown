@@ -9,14 +9,17 @@ import de.timecoding.cc.util.CubicSettings;
 import de.timecoding.cc.util.type.Cube;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 
 import java.util.ConcurrentModificationException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class CubicListener implements Listener {
@@ -55,11 +58,16 @@ public class CubicListener implements Listener {
     }
 
     @EventHandler
-    public void onBlockExplode(BlockExplodeEvent event) {
-        proof(null, event.getBlock().getLocation(), true);
+    public void onEntityExplode(EntityExplodeEvent event) {
+        boolean stop = false;
+        for(Block block : event.blockList()){
+            if(!stop && proof(null, block.getLocation(), true)){
+                stop = true;
+            }
+        }
     }
 
-    public CubicListener proof(Player player, Location origin, boolean breakBlock) {
+    public boolean proof(Player player, Location origin, boolean breakBlock) {
         DataHandler dataHandler = plugin.getDataHandler();
         AtomicReference<Cube> atomicCube = new AtomicReference<>();
         plugin.getCubes().forEach(searchedCube -> {
@@ -78,8 +86,10 @@ public class CubicListener implements Listener {
             Bukkit.getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
                 countdownModule.start();
+                return true;
             }
         } else if (atomicCube.get() != null && breakBlock) {
+            AtomicBoolean r = new AtomicBoolean(false);
             try {
                 plugin.getCountdownList().forEach(countdownModule -> {
                     if (countdownModule.getCubicSettings().getCube() != null && countdownModule.getCubicSettings().getCube().isSimilar(atomicCube.get())) {
@@ -87,12 +97,14 @@ public class CubicListener implements Listener {
                         Bukkit.getPluginManager().callEvent(event);
                         if (!event.isCancelled()) {
                             countdownModule.cancel();
+                            r.set(true);
                         }
                     }
                 });
              //TODO
             }catch(ConcurrentModificationException exception){}
+            return r.get();
         }
-        return this;
+        return false;
     }
 }

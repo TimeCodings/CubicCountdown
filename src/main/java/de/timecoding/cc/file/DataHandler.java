@@ -79,7 +79,7 @@ public class DataHandler {
         if (keyExists(key)) {
             return ChatColor.translateAlternateColorCodes('&', cfg.getString(key));
         }
-        return null;
+        return "";
     }
 
     public Boolean getBoolean(String key) {
