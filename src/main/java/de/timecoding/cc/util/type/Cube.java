@@ -1,5 +1,6 @@
 package de.timecoding.cc.util.type;
 
+import de.timecoding.cc.CubicCountdown;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -7,6 +8,7 @@ import org.bukkit.block.Block;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Cube {
 
@@ -14,10 +16,13 @@ public class Cube {
     private Location pos1;
     private Location pos2;
 
-    public Cube(String name, Location pos1, Location pos2) {
+    private CubicCountdown plugin;
+
+    public Cube(String name, Location pos1, Location pos2, CubicCountdown plugin) {
         this.name = name;
         this.pos1 = pos1;
         this.pos2 = pos2;
+        this.plugin = plugin;
     }
 
     public String getName() {
@@ -60,11 +65,28 @@ public class Cube {
 
     public boolean filledOut() {
         AtomicBoolean filledOut = new AtomicBoolean(true);
+        AtomicInteger highestY = new AtomicInteger();
+        List<Block> highestList = new ArrayList<>();
         blockList(true).forEach(block -> {
+            if(block.getLocation().getBlockY() > highestY.get()){
+                highestY.set(block.getLocation().getBlockY());
+                highestList.clear();
+                highestList.add(block);
+            }else if(block.getLocation().getBlockY() == highestY.get()){
+                highestList.add(block);
+            }
             if (block == null || block.getType() == Material.AIR) {
                 filledOut.set(false);
             }
         });
+        if(plugin.getConfigHandler().getBoolean("StartWhenFullFirstLayer") || !plugin.getConfigHandler().keyExists("StartWhenFullFirstLayer")){
+            filledOut.set(true);
+            highestList.forEach(block -> {
+                if(block == null || block.getType() == Material.AIR){
+                    filledOut.set(false);
+                }
+            });
+        }
         return filledOut.get();
     }
 

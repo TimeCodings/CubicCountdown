@@ -1,11 +1,9 @@
 package de.timecoding.cc.util;
 
 import de.timecoding.cc.CubicCountdown;
+import de.timecoding.cc.event.CubeCountdownEndEvent;
 import de.timecoding.cc.util.type.CubicStateType;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -18,6 +16,8 @@ public class CountdownModule {
     private CubicCountdown plugin;
     private CubicSettings cubicSettings;
 
+    private CountdownModule countdownModule = this;
+
     private int countdownId = -1;
     private int seconds = -1;
 
@@ -26,39 +26,73 @@ public class CountdownModule {
         this.plugin = this.cubicSettings.getPlugin();
     }
 
-    public void start() {
-        if (!isRunning()) {
+    public void start(){
+        start(false);
+    }
+
+    public void start(boolean ignoreStartTitle) {
+        if (!isRunning() || ignoreStartTitle) {
             boolean next = true;
-            for (CountdownModule countdownModule : plugin.getCountdownList()) {
-                if (getCubicSettings().getCube() != null && countdownModule.getCubicSettings().getCube() != null && countdownModule.getCubicSettings().getCube().getName().equalsIgnoreCase(getCubicSettings().getCube().getName())) {
-                    next = false;
+            if(!ignoreStartTitle) {
+                for (CountdownModule countdownModule : plugin.getCountdownList()) {
+                    if (getCubicSettings().getCube() != null && countdownModule.getCubicSettings().getCube() != null && countdownModule.getCubicSettings().getCube().getName().equalsIgnoreCase(getCubicSettings().getCube().getName())) {
+                        next = false;
+                    }
                 }
             }
             if (next) {
-                this.seconds = this.cubicSettings.getCountdownSeconds();
-                plugin.getCountdownList().add(this);
-                if (cubicSettings.getStartDelay() >= 20 && cubicSettings.hasTitle(CubicStateType.START)) {
-                    sendTitle(CubicStateType.START);
+                if(!ignoreStartTitle) {
+                    this.seconds = this.cubicSettings.getCountdownSeconds();
+                    plugin.getCountdownList().add(this);
+                    if (cubicSettings.getStartDelay() >= 20 && cubicSettings.hasTitle(CubicStateType.START)) {
+                        sendTitle(CubicStateType.START);
+                    }
                 }
+                Integer startDelay = 0;
+                if(!ignoreStartTitle){
+                    startDelay = cubicSettings.getStartDelay();
+                }
+                countdownModule = this;
                 this.countdownId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
                     @Override
                     public void run() {
-                        sendTitle(cubicSettings.getTitle(CubicStateType.PROCEED).replace("%seconds%", String.valueOf(seconds)), cubicSettings.getSubtitle(CubicStateType.PROCEED));
-                        playSound(CubicStateType.PROCEED);
+                        if (plugin.getConfigHandler().keyExists("Settings.CUSTOM." + seconds) && seconds > 0) {
+                            String base = "Settings.CUSTOM."+seconds+".";
+                            if(plugin.getConfigHandler().keyExists(base+"Title")){
+                                String subtitle = "";
+                                if(plugin.getConfigHandler().keyExists(base+"Subtitle")){
+                                    subtitle = plugin.getConfigHandler().getString(base+"Subtitle");
+                                }
+                                sendTitle(plugin.getConfigHandler().getString(base+"Title").replace("%seconds%", String.valueOf(seconds)), subtitle);
+                            }
+                            if(Sound.valueOf(plugin.getConfigHandler().getString(base+"Sound")) != null){
+                                playSound(Sound.valueOf(plugin.getConfigHandler().getString(base+"Sound")));
+                            }
+                            if(plugin.getConfigHandler().keyExists(base+"Ticks")){
+                                extraTicks(base);
+                            }
+                        }else {
+                            sendTitle(cubicSettings.getTitle(CubicStateType.PROCEED).replace("%seconds%", String.valueOf(seconds)), cubicSettings.getSubtitle(CubicStateType.PROCEED));
+                            playSound(CubicStateType.PROCEED);
+                        }
                         if (seconds <= 0) {
-                            detonateFirework();
-                            sendTitle(CubicStateType.END);
-                            cubicSettings.fireworkLocations().forEach(location -> {
-                                Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
-                                firework.setFireworkMeta(cubicSettings.getFireworkMeta());
-                                firework.detonate();
-                            });
-                            clearCube();
-                            stop();
+                            CubeCountdownEndEvent event = new CubeCountdownEndEvent(countdownModule);
+                            Bukkit.getPluginManager().callEvent(event);
+                            if(!event.isCancelled()) {
+                                detonateFirework();
+                                sendTitle(CubicStateType.END);
+                                cubicSettings.fireworkLocations().forEach(location -> {
+                                    Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+                                    firework.setFireworkMeta(cubicSettings.getFireworkMeta());
+                                    firework.detonate();
+                                });
+                                clearCube();
+                                stop();
+                            }
                         }
                         seconds--;
                     }
-                }, cubicSettings.getStartDelay(), 20);
+                }, startDelay, 20);
             }
         }
     }
@@ -81,6 +115,12 @@ public class CountdownModule {
         });
     }
 
+    private void playSound(Sound sound) {
+        cubicSettings.playerList().forEach(player -> {
+            player.playSound(player.getLocation(), sound, 2, 2);
+        });
+    }
+
     public void clearCube() {
         if (plugin.getConfigHandler().getBoolean("ClearCube.Enabled") && getCubicSettings().getCube() != null) {
             getCubicSettings().getCube().blockList(false).forEach(block -> {
@@ -99,6 +139,10 @@ public class CountdownModule {
     public void cancel() {
         if (isRunning()) {
             sendTitle(CubicStateType.CANCELLED);
+            if(fallbackId > -1){
+                Bukkit.getScheduler().cancelTask(fallbackId);
+                fallbackId = -1;
+            }
             this.stop();
         }
     }
@@ -108,6 +152,22 @@ public class CountdownModule {
             Bukkit.getScheduler().cancelTask(this.countdownId);
             plugin.getCountdownList().remove(this);
             this.countdownId = -1;
+        }
+    }
+
+    private int fallbackId = -1;
+
+    private void extraTicks(String base) {
+        if (isRunning()) {
+            Bukkit.getScheduler().cancelTask(this.countdownId);
+            this.countdownId = -1;
+            this.fallbackId = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    fallbackId = -1;
+                    start(true);
+                }
+            }, plugin.getConfigHandler().getInteger(base+"Ticks"));
         }
     }
 

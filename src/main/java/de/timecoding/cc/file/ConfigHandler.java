@@ -17,7 +17,7 @@ import java.util.Map;
 public class ConfigHandler {
 
     private final CubicCountdown plugin;
-    private final String newconfigversion = "1.0.0";
+    private final String newconfigversion = "1.1.0";
     private final boolean retry = false;
     public YamlConfiguration cfg = null;
     private File f = null;

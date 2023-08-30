@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CubicSettings {
 
@@ -90,7 +91,9 @@ public class CubicSettings {
     }
 
     public void addPlayer(Player player) {
-        playerList.add(player);
+        if(!plugin.viewingCountdown(player)) {
+            playerList.add(player);
+        }
     }
 
     public void removePlayer(Player player) {

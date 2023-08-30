@@ -1,5 +1,5 @@
 ###############################
-#    CubicCountdown v1.0.0    #
+#    CubicCountdown v1.1.0    #
 #     made by TimeCoding      #
 ######################################################
 #    Support: https://discord.tikmc.de/              #
@@ -34,6 +34,30 @@ Settings:
     Subtitle: "&cWins: %win_counter%"
     #You can find all sounds here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
     Sound: ENTITY_PLAYER_LEVELUP
+  CUSTOM:
+    #Set custom settings for second 3
+    3:
+      #Set the title
+      Title: "&a&l3"
+      #Set the subtitle
+      Subtitle: ""
+      #Set the sound
+      Sound: BLOCK_NOTE_BLOCK_BASS
+      #Set ticks, so the countdown seems slower or faster (20 ticks = 1 second)
+      Ticks: 20
+    2:
+      Title: "&c&l2"
+      Subtitle: ""
+      Sound: BLOCK_NOTE_BLOCK_BASS
+      Ticks: 20
+    1:
+      Title: "&f&l1"
+      Subtitle: ""
+      Sound: BLOCK_NOTE_BLOCK_BASS
+      Ticks: 20
+#Disable this if the countdown should only start if the whole cube is full of blocks
+#WISH BY THE TIKFINITY COMMUNITY
+StartWhenFullFirstLayer: true
 #Decide if all blocks in the cube, after the countdown reached 0, should be deleted/cleared
 ClearCube:
   Enabled: true
@@ -66,9 +90,11 @@ Firework:
     - "RED"
     - "ORANGE"
     - "YELLOW"
-
+#bStats is sending data to their platform, so everyone can look up how many users are using this plugin
+#To disable the sharing mode, set this option to false
+bStats: true
 #DO NOT CHANGE THIS
-config-version: 1.0.0
+config-version: 1.1.0
 
 #######################################################################################
 # A SETTING IS MISSING FOR YOU? NO PROBLEM, JOIN OUR DISCORD AND WE'LL ADD IT FOR YOU #
