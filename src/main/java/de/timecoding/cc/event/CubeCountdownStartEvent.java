@@ -7,17 +7,21 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class CubeFilledOutEvent extends Event implements Cancellable {
+public class CubeCountdownStartEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled = false;
     private Player player;
     private CubicSettings cubicSettings;
     private CountdownModule countdownModule;
 
-    public CubeFilledOutEvent(Player player, CountdownModule countdownModule) {
+    public CubeCountdownStartEvent(Player player, CountdownModule countdownModule) {
         this.player = player;
         this.countdownModule = countdownModule;
         this.cubicSettings = this.countdownModule.getCubicSettings();
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public Player getPlayer() {
@@ -48,10 +52,6 @@ public class CubeFilledOutEvent extends Event implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList(){
         return handlers;
     }
 }

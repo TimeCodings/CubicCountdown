@@ -20,20 +20,21 @@ public class CountdownModule {
 
     private int countdownId = -1;
     private int seconds = -1;
+    private int fallbackId = -1;
 
     public CountdownModule(CubicSettings settings) {
         this.cubicSettings = settings;
         this.plugin = this.cubicSettings.getPlugin();
     }
 
-    public void start(){
+    public void start() {
         start(false);
     }
 
     public void start(boolean ignoreStartTitle) {
         if (!isRunning() || ignoreStartTitle) {
             boolean next = true;
-            if(!ignoreStartTitle) {
+            if (!ignoreStartTitle) {
                 for (CountdownModule countdownModule : plugin.getCountdownList()) {
                     if (getCubicSettings().getCube() != null && countdownModule.getCubicSettings().getCube() != null && countdownModule.getCubicSettings().getCube().getName().equalsIgnoreCase(getCubicSettings().getCube().getName())) {
                         next = false;
@@ -41,7 +42,7 @@ public class CountdownModule {
                 }
             }
             if (next) {
-                if(!ignoreStartTitle) {
+                if (!ignoreStartTitle) {
                     this.seconds = this.cubicSettings.getCountdownSeconds();
                     plugin.getCountdownList().add(this);
                     if (cubicSettings.getStartDelay() >= 20 && cubicSettings.hasTitle(CubicStateType.START)) {
@@ -49,7 +50,7 @@ public class CountdownModule {
                     }
                 }
                 Integer startDelay = 0;
-                if(!ignoreStartTitle){
+                if (!ignoreStartTitle) {
                     startDelay = cubicSettings.getStartDelay();
                 }
                 countdownModule = this;
@@ -57,28 +58,28 @@ public class CountdownModule {
                     @Override
                     public void run() {
                         if (plugin.getConfigHandler().keyExists("Settings.CUSTOM." + seconds) && seconds > 0) {
-                            String base = "Settings.CUSTOM."+seconds+".";
-                            if(plugin.getConfigHandler().keyExists(base+"Title")){
+                            String base = "Settings.CUSTOM." + seconds + ".";
+                            if (plugin.getConfigHandler().keyExists(base + "Title")) {
                                 String subtitle = "";
-                                if(plugin.getConfigHandler().keyExists(base+"Subtitle")){
-                                    subtitle = plugin.getConfigHandler().getString(base+"Subtitle");
+                                if (plugin.getConfigHandler().keyExists(base + "Subtitle")) {
+                                    subtitle = plugin.getConfigHandler().getString(base + "Subtitle");
                                 }
-                                sendTitle(plugin.getConfigHandler().getString(base+"Title").replace("%seconds%", String.valueOf(seconds)), subtitle);
+                                sendTitle(plugin.getConfigHandler().getString(base + "Title").replace("%seconds%", String.valueOf(seconds)), subtitle);
                             }
-                            if(Sound.valueOf(plugin.getConfigHandler().getString(base+"Sound")) != null){
-                                playSound(Sound.valueOf(plugin.getConfigHandler().getString(base+"Sound")));
+                            if (Sound.valueOf(plugin.getConfigHandler().getString(base + "Sound")) != null) {
+                                playSound(Sound.valueOf(plugin.getConfigHandler().getString(base + "Sound")));
                             }
-                            if(plugin.getConfigHandler().keyExists(base+"Ticks")){
+                            if (plugin.getConfigHandler().keyExists(base + "Ticks")) {
                                 extraTicks(base);
                             }
-                        }else {
+                        } else {
                             sendTitle(cubicSettings.getTitle(CubicStateType.PROCEED).replace("%seconds%", String.valueOf(seconds)), cubicSettings.getSubtitle(CubicStateType.PROCEED));
                             playSound(CubicStateType.PROCEED);
                         }
                         if (seconds <= 0) {
                             CubeCountdownEndEvent event = new CubeCountdownEndEvent(countdownModule);
                             Bukkit.getPluginManager().callEvent(event);
-                            if(!event.isCancelled()) {
+                            if (!event.isCancelled()) {
                                 detonateFirework();
                                 sendTitle(CubicStateType.END);
                                 cubicSettings.fireworkLocations().forEach(location -> {
@@ -139,7 +140,7 @@ public class CountdownModule {
     public void cancel() {
         if (isRunning()) {
             sendTitle(CubicStateType.CANCELLED);
-            if(fallbackId > -1){
+            if (fallbackId > -1) {
                 Bukkit.getScheduler().cancelTask(fallbackId);
                 fallbackId = -1;
             }
@@ -155,8 +156,6 @@ public class CountdownModule {
         }
     }
 
-    private int fallbackId = -1;
-
     private void extraTicks(String base) {
         if (isRunning()) {
             Bukkit.getScheduler().cancelTask(this.countdownId);
@@ -167,7 +166,7 @@ public class CountdownModule {
                     fallbackId = -1;
                     start(true);
                 }
-            }, plugin.getConfigHandler().getInteger(base+"Ticks"));
+            }, plugin.getConfigHandler().getInteger(base + "Ticks"));
         }
     }
 

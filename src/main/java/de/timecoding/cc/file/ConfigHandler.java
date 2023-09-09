@@ -1,6 +1,7 @@
 package de.timecoding.cc.file;
 
 import de.timecoding.cc.CubicCountdown;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,7 +18,7 @@ import java.util.Map;
 public class ConfigHandler {
 
     private final CubicCountdown plugin;
-    private final String newconfigversion = "1.1.0";
+    private final String newconfigversion = "1.2.0";
     private final boolean retry = false;
     public YamlConfiguration cfg = null;
     private File f = null;
@@ -69,6 +70,9 @@ public class ConfigHandler {
 
     public String getString(String key) {
         if (keyExists(key)) {
+            if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                return PlaceholderAPI.setPlaceholders(null, ChatColor.translateAlternateColorCodes('&', cfg.getString(key)));
+            }
             return ChatColor.translateAlternateColorCodes('&', cfg.getString(key));
         }
         return "";
@@ -85,6 +89,9 @@ public class ConfigHandler {
         if (keyExists(key)) {
             List<String> list = getConfig().getStringList(key);
             list.replaceAll(msg -> msg.replace("&", "§"));
+            if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                list.replaceAll(msg -> PlaceholderAPI.setPlaceholders(null, msg));
+            }
             return list;
         }
         return new ArrayList<>();
@@ -120,7 +127,7 @@ public class ConfigHandler {
         Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Checking for config updates...");
         if (configUpdateAvailable()) {
             final Map<String, Object> quicksave = getConfig().getValues(true);
-            File file = new File("plugins//JustOneBlock", "config.yml");
+            File file = new File("plugins//CubicCountdown", "config.yml");
             if (file.exists()) {
                 try {
                     Files.delete(file.toPath());
@@ -133,11 +140,6 @@ public class ConfigHandler {
                     public void run() {
                         plugin.saveResource("config.yml", true);
                         reload();
-                        for (String save : quicksave.keySet()) {
-                            if (keyExists(save) && quicksave.get(save) != null && !save.equalsIgnoreCase("config-version") && !save.equalsIgnoreCase("License-Key")) {
-                                getConfig().set(save, quicksave.get(save));
-                            }
-                        }
                         save();
                         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Config got updated!");
                     }

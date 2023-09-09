@@ -1,11 +1,13 @@
 package de.timecoding.cc.util.type;
 
 import de.timecoding.cc.CubicCountdown;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,9 +51,9 @@ public class Cube {
             int topBlockZ = (pos1.getBlockZ() < pos2.getBlockZ() ? pos2.getBlockZ() : pos1.getBlockZ());
             int bottomBlockZ = (pos1.getBlockZ() > pos2.getBlockZ() ? pos2.getBlockZ() : pos1.getBlockZ());
 
-            for (int x = bottomBlockX; x <= topBlockX; x++) {
+            for (int y = bottomBlockY; y <= topBlockY; y++) {
                 for (int z = bottomBlockZ; z <= topBlockZ; z++) {
-                    for (int y = bottomBlockY; y <= topBlockY; y++) {
+                    for (int x = bottomBlockX; x <= topBlockX; x++) {
                         Block block = pos1.getWorld().getBlockAt(x, y, z);
                         if (!includeAir && block.getType() != null && block.getType() != Material.AIR || includeAir) {
                             blockList.add(block);
@@ -63,31 +65,55 @@ public class Cube {
         return blockList;
     }
 
+    public List<Block> airBlockList() {
+        List<Block> airBlockList = new ArrayList<>();
+        for (Block block : blockList(true)) {
+            if (block == null || block.getType() == Material.AIR) {
+                airBlockList.add(block);
+            }
+        }
+        return airBlockList;
+    }
+
     public boolean filledOut() {
         AtomicBoolean filledOut = new AtomicBoolean(true);
         AtomicInteger highestY = new AtomicInteger();
         List<Block> highestList = new ArrayList<>();
         blockList(true).forEach(block -> {
-            if(block.getLocation().getBlockY() > highestY.get()){
+            if (block.getLocation().getBlockY() > highestY.get()) {
                 highestY.set(block.getLocation().getBlockY());
                 highestList.clear();
                 highestList.add(block);
-            }else if(block.getLocation().getBlockY() == highestY.get()){
+            } else if (block.getLocation().getBlockY() == highestY.get()) {
                 highestList.add(block);
             }
             if (block == null || block.getType() == Material.AIR) {
                 filledOut.set(false);
             }
         });
-        if(plugin.getConfigHandler().getBoolean("StartWhenFullFirstLayer") || !plugin.getConfigHandler().keyExists("StartWhenFullFirstLayer")){
+        if (plugin.getConfigHandler().getBoolean("StartWhenFullFirstLayer") || !plugin.getConfigHandler().keyExists("StartWhenFullFirstLayer")) {
             filledOut.set(true);
             highestList.forEach(block -> {
-                if(block == null || block.getType() == Material.AIR){
+                if (block == null || block.getType() == Material.AIR) {
                     filledOut.set(false);
                 }
             });
         }
         return filledOut.get();
+    }
+
+    public boolean empty() {
+        List<Block> blockList = blockList(false);
+        List<Block> toRemove = new ArrayList<>();
+        if (blockList != null) {
+            for (Block block : blockList) {
+                if (plugin.getConfigHandler().getStringList("ClearCube.DisabledBlocks").contains(block.getType().toString().toUpperCase())) {
+                    toRemove.add(block);
+                }
+            }
+        }
+        blockList.removeAll(toRemove);
+        return (blockList.size() == 0);
     }
 
     public boolean inCube(Location location) {

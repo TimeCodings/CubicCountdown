@@ -1,13 +1,16 @@
 ###############################
-#    CubicCountdown v1.1.0    #
+#    CubicCountdown v1.2.0    #
 #     made by TimeCoding      #
 ######################################################
 #    Support: https://discord.tikmc.de/              #
 #    Donate: https://buymeacoffee.com/timecoding/    #
 ######################################################
 
-#The countdown in seconds
+#The DEFAULT countdown in seconds
 Countdown: 10
+#Set this to true if the countdown should start when a cube is empty (instead of a cube is full of blocks)
+#THIS DISABLES THE CUBECLEAR OPTION
+Reverse: false
 #The general sound and title settings
 Settings:
   #Title and sound settings for the first second of the countdown
@@ -61,7 +64,7 @@ StartWhenFullFirstLayer: true
 #Decide if all blocks in the cube, after the countdown reached 0, should be deleted/cleared
 ClearCube:
   Enabled: true
-  #Decide if some block-"types" should be disabled
+  #Decide if some block-"types" should be disabled/ignored
   #You can find all block-names here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
   DisabledBlocks:
     - BEDROCK
@@ -90,11 +93,37 @@ Firework:
     - "RED"
     - "ORANGE"
     - "YELLOW"
+#NEW IN v1.2: In this version you're now able to fill out/(clear a cube) (with blocks)
+FillAction:
+  #Set the ticks (20 ticks = 1 second) how fast the animation should be played
+  AnimationTicks: 2
+  #Set this to true if all players which would "bug" into a block after the fill action is performed get teleported over the added blocks
+  Teleport: true
+  #Disable this if every block should be replaced
+  OnlyAir: true
+  #Disable this if it shouldnt be possible to execute the fill action/animation while another is running
+  Queue: true
+  #Decide if some block-"types" should be disabled/ignored
+  #You can find all block-names here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+  DisabledBlocks:
+    - BEDROCK
+ClearAction:
+  #Decide if some block-"types" should be disabled/ignored
+  #You can find all block-names here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+  DisabledBlocks:
+    - BEDROCK
+#NEW IN v1.2: Create an actionbar, which can show the win, games played and the lose counter
+#when a player is near a cube
+Actionbar:
+  Enabled: false
+  Format: "&aWins: §7%win_counter% &f| §cLoses: &7%lose_counter% &f| §eGames played: §7%games_played%"
+#The max distance in blocks of the player to the next cube that it shows the actionbar (and maybe soon the scoreboard)
+CubeRadius: 5
 #bStats is sending data to their platform, so everyone can look up how many users are using this plugin
 #To disable the sharing mode, set this option to false
 bStats: true
 #DO NOT CHANGE THIS
-config-version: 1.1.0
+config-version: 1.2.0
 
 #######################################################################################
 # A SETTING IS MISSING FOR YOU? NO PROBLEM, JOIN OUR DISCORD AND WE'LL ADD IT FOR YOU #

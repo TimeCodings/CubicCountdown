@@ -66,7 +66,7 @@ public class CubicSetup implements Listener {
                 plugin.getDataHandler().setLocation("Cube." + name.toUpperCase() + ".Pos1", pos1);
                 plugin.getDataHandler().setLocation("Cube." + name.toUpperCase() + ".Pos2", pos2);
                 plugin.getConfigHandler().getConfig().set("Countdown", countdown);
-                plugin.getDataHandler().getConfig().set("Cube."+name+".Countdown", countdown);
+                plugin.getDataHandler().getConfig().set("Cube." + name + ".Countdown", countdown);
                 plugin.getDataHandler().save();
                 plugin.getConfigHandler().save();
                 break;

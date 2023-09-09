@@ -2,7 +2,6 @@ package de.timecoding.cc.event;
 
 import de.timecoding.cc.util.CountdownModule;
 import de.timecoding.cc.util.CubicSettings;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -16,6 +15,10 @@ public class CubeCountdownEndEvent extends Event implements Cancellable {
     public CubeCountdownEndEvent(CountdownModule countdownModule) {
         this.countdownModule = countdownModule;
         this.cubicSettings = this.countdownModule.getCubicSettings();
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public CountdownModule getCountdownModule() {
@@ -38,10 +41,6 @@ public class CubeCountdownEndEvent extends Event implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList(){
         return handlers;
     }
 }
