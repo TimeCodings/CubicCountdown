@@ -9,6 +9,7 @@ import org.bukkit.command.TabCompleter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class CubicCompleter implements TabCompleter {
 
@@ -21,24 +22,38 @@ public class CubicCompleter implements TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         if (command.getName().equalsIgnoreCase("cubiccountdown")) {
+            List<String> complete = new ArrayList<>();
             List<String> completer = new ArrayList<>();
             if (strings.length == 1) {
-                completer.add("setup");
-                completer.add("cancel");
-                completer.add("delete");
-                completer.add("reload");
-                completer.add("fill");
-                completer.add("clear");
-                completer.add("cubes");
-                completer.add("setEntry");
-                completer.add("help");
+                complete.add("setup");
+                complete.add("cancel");
+                complete.add("delete");
+                complete.add("reload");
+                complete.add("fill");
+                complete.add("clear");
+                complete.add("cubes");
+                complete.add("setEntry");
+                complete.add("help");
+                if(strings[0].length() > 0) {
+                    complete.forEach(s1 -> {
+                        if (s1.contains(strings[0])) {
+                            completer.add(s1);
+                        }
+                    });
+                }else{
+                    completer.addAll(complete);
+                }
             } else if (strings.length == 2) {
                 if (strings[0].equalsIgnoreCase("cancel")) {
                     plugin.getCountdownList().forEach(countdownModule -> completer.add(countdownModule.getCubicSettings().getCube().getName()));
                 } else if (strings[0].equalsIgnoreCase("delete") || strings[0].equalsIgnoreCase("fill") || strings[0].equalsIgnoreCase("clear")) {
                     plugin.getCubicAPI().getCubes().forEach(cube -> completer.add(cube.getName()));
                 } else if (strings[0].equalsIgnoreCase("setEntry") || strings[0].equalsIgnoreCase("set")) {
-                    plugin.getConfigHandler().getConfig().getKeys(true).forEach(string -> completer.add(string));
+                    plugin.getConfigHandler().getConfig().getKeys(true).forEach(string -> {
+                        if(string.length() > 0 && string.contains(strings[1]) || strings[1].length() == 0){
+                            completer.add(string);
+                        }
+                    });
                 }
             } else if (strings.length == 3) {
                 if (strings[0].equalsIgnoreCase("fill")) {
@@ -47,10 +62,13 @@ public class CubicCompleter implements TabCompleter {
                         String[] split = value.split(",");
                         final String[] matList = {""};
                         Arrays.stream(split).forEach(string -> {
-                            if (isMaterial(string)) {
-                                matList[0] = matList[0] + ",";
+                            if (isMaterial(string.toUpperCase())) {
+                                matList[0] = matList[0] + string + ",";
                             }
                         });
+                        if(matList[0].equalsIgnoreCase("")){
+                            matList[0] = value;
+                        }
                         Arrays.stream(Material.values()).forEach(material -> completer.add(matList[0] + material.toString().toLowerCase()));
                     } else {
                         Arrays.stream(Material.values()).forEach(material -> completer.add(material.toString().toLowerCase()));
@@ -62,10 +80,19 @@ public class CubicCompleter implements TabCompleter {
                 }
             } else if (strings.length == 4) {
                 if (strings[0].equalsIgnoreCase("fill")) {
-                    completer.add("1");
-                    completer.add("10");
-                    completer.add("100");
-                    completer.add("1000");
+                    AtomicReference<String> after = new AtomicReference<>("");
+                    String value = strings[2];
+                    if(value.contains(",")){
+                        String[] split = value.split(",");
+                        Arrays.stream(split).forEach(string -> {
+                            after.set(after + "PLACE, ");
+                        });
+                    }else{
+                        after.set("PLACE, ");
+                    }
+                    for(int i = 1; i < 50; i++){
+                        completer.add(after.get().substring(0, after.get().length()-2).replaceAll("PLACE", String.valueOf(i)));
+                    }
                 }
             }
             return completer;

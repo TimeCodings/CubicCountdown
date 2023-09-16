@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="CubicCountdown">
-    <output-path>$USER_HOME$/Documents/Localhost/plugins</output-path>
+    <output-path>$USER_HOME$/Desktop/Server/plugins</output-path>
     <root id="archive" name="CubicCountdown.jar">
       <element id="module-output" name="CubicCountdown" />
     </root>

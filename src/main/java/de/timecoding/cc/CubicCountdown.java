@@ -1,5 +1,6 @@
 package de.timecoding.cc;
 
+import de.timecoding.cc.api.AutoUpdater;
 import de.timecoding.cc.api.CubicExpansion;
 import de.timecoding.cc.api.Metrics;
 import de.timecoding.cc.command.CubicCommand;
@@ -10,11 +11,18 @@ import de.timecoding.cc.file.DataHandler;
 import de.timecoding.cc.listener.CubicListener;
 import de.timecoding.cc.util.CountdownModule;
 import de.timecoding.cc.util.CubicAPI;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,6 +35,8 @@ public class CubicCountdown extends JavaPlugin {
     //FOR API USAGE ONLY
     private CubicCountdown plugin;
     private CubicListener cubicListener;
+
+    private AutoUpdater autoUpdater;
     private Metrics metrics = null;
 
     public void onEnable() {
@@ -34,6 +44,7 @@ public class CubicCountdown extends JavaPlugin {
         this.configHandler = new ConfigHandler(this);
         this.dataHandler = new DataHandler(this);
         this.cubicListener = new CubicListener(this);
+        this.autoUpdater = new AutoUpdater(this, plugin.getDescription().getVersion());
         this.getServer().getPluginManager().registerEvents(this.cubicListener, this);
         cubicAPI = new CubicAPI(this);
         PluginCommand pluginCommand = this.getCommand("cubiccountdown");
@@ -57,6 +68,7 @@ public class CubicCountdown extends JavaPlugin {
             }
         }
     }
+
 
     public ConfigHandler getConfigHandler() {
         return configHandler;

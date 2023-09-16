@@ -6,6 +6,7 @@ import de.timecoding.cc.util.type.Cube;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -76,6 +77,17 @@ public class CubicAPI {
         List<Cube> cubeList = new ArrayList<>();
         cubeStringList.forEach(string -> cubeList.add(new Cube(string, plugin.getDataHandler().getLocation("Cube." + string + ".Pos1"), plugin.getDataHandler().getLocation("Cube." + string + ".Pos2"), plugin)));
         return cubeList;
+    }
+
+    public Cube getCubeAtLocation(Location location){
+        for(Cube cube : getCubes()){
+            for(Block block : cube.blockList(true)){
+                if(location.equals(block.getLocation())){
+                    return cube;
+                }
+            }
+        }
+        return null;
     }
 
     public Cube getCubeByName(String cubeName) {

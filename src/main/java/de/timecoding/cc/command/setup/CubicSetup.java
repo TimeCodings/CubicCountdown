@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class CubicSetup implements Listener {
 
@@ -77,17 +78,19 @@ public class CubicSetup implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getPlayer().equals(player)) {
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
-                event.setCancelled(true);
-                if (step == 1) {
-                    player.sendMessage("§aEdge 1 was set! §7You made a mistake? Just type §cCANCEL §7into the chat");
-                    this.pos1 = event.getClickedBlock().getLocation();
-                    triggerNextStep();
-                } else if (step == 2) {
-                    player.sendMessage("§aEdge 2 was set! §7You made a mistake? Just type §cCANCEL §7into the chat");
-                    this.pos2 = event.getClickedBlock().getLocation();
-                    triggerNextStep();
-                } else {
-                    event.setCancelled(false);
+                if(event.getHand() == EquipmentSlot.HAND) {
+                    event.setCancelled(true);
+                    if (step == 1) {
+                        player.sendMessage("§aEdge 1 was set! §7You made a mistake? Just type §cCANCEL §7into the chat");
+                        this.pos1 = event.getClickedBlock().getLocation();
+                        triggerNextStep();
+                    } else if (step == 2) {
+                        player.sendMessage("§aEdge 2 was set! §7You made a mistake? Just type §cCANCEL §7into the chat");
+                        this.pos2 = event.getClickedBlock().getLocation();
+                        triggerNextStep();
+                    } else {
+                        event.setCancelled(false);
+                    }
                 }
             }
         }

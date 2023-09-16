@@ -93,7 +93,7 @@ public class CubicSettings {
     }
 
     public void addPlayer(Player player) {
-        if (!plugin.getCubicAPI().viewingCountdown(player)) {
+        if (!plugin.getCubicAPI().viewingCountdown(player) && !playerList.contains(player)) {
             playerList.add(player);
         }
     }

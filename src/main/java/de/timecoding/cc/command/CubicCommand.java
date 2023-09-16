@@ -4,6 +4,7 @@ import de.timecoding.cc.CubicCountdown;
 import de.timecoding.cc.command.setup.CubicSetup;
 import de.timecoding.cc.util.type.Cube;
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -175,63 +176,101 @@ public class CubicCommand implements CommandExecutor {
                                     }
                                     commandSender.sendMessage("§aSuccessfully performed §efill-action §afor map §e" + cubeName + "§a!");
                                     List<Block> finalBlockList = blockList;
-                                    task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-                                        int i = 0;
+                                    List<Player> playerList = new ArrayList<>();
+                                    if (plugin.getConfigHandler().getBoolean("Viewer.AllPlayers")) {
+                                        Bukkit.getOnlinePlayers().forEach(onlinePlayer -> playerList.add(onlinePlayer));
+                                    } else if (plugin.getConfigHandler().getBoolean("Viewer.AllPlayersInCubeRadius.Enabled")) {
+                                        cube.blockList(true).forEach(block -> {
+                                            Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
+                                                if (block.getLocation().distance(onlinePlayer.getLocation()) < plugin.getConfigHandler().getInteger("Viewer.AllPlayersInCubeRadius.RadiusInBlocks")) {
+                                                    playerList.add(onlinePlayer);
+                                                }
+                                            });
+                                        });
+                                    }else if(commandSender instanceof Player){
+                                        playerList.add((Player) commandSender);
+                                    }
+                                    if (plugin.getConfigHandler().getBoolean("FillAction.Animation")) {
+                                        List<Block> finalBlockList1 = blockList;
+                                        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+                                            int i = 0;
 
-                                        @Override
-                                        public void run() {
-                                            if (amountList[0].size() > random[0].get() && amountList[0].get(random[0].get()) > 0 && i < finalBlockList.size()) {
-                                                if (!plugin.getConfigHandler().getStringList("FillAction.DisabledBlocks").contains(finalBlockList.get(i).getType().toString().toUpperCase())) {
-                                                    try {
-                                                        finalBlockList.get(i).setType(materialList[0].get(random[0].get()));
-                                                    } catch (IllegalArgumentException exception) {
-                                                    }
-                                                    amountList[0].set(random[0].get(), (amountList[0].get(random[0].get()) - 1));
-                                                    random[0].set(new Random().nextInt(materialList[0].size()));
-                                                    finalBlockList.get(i).getWorld().getPlayers().forEach(player -> {
-                                                        if (finalBlockList.get(i).getLocation().distance(player.getLocation()) <= 1.0 && plugin.getConfigHandler().getBoolean("FillAction.Teleport")) {
-                                                            player.teleport(player.getLocation().add(0, 1, 0));
+                                            @Override
+                                            public void run() {
+                                                if (amountList[0].size() > random[0].get() && amountList[0].get(random[0].get()) > 0 && i < finalBlockList.size()) {
+                                                    if (!plugin.getConfigHandler().getStringList("FillAction.DisabledBlocks").contains(finalBlockList.get(i).getType().toString().toUpperCase())) {
+                                                        fillCube(amountList, materialList, i, random, finalBlockList);
+                                                        if(plugin.getConfigHandler().getBoolean("FillAction.Effect.Enabled")){
+                                                            for(int i = 0; i <= (plugin.getConfigHandler().getInteger("FillAction.Effect.BlocksAhead")); i++) {
+                                                                if(finalBlockList1.size() > (this.i+i)) {
+                                                                    finalBlockList1.get((this.i+i)).getLocation().getWorld().playEffect(finalBlockList1.get((this.i + i)).getLocation(), Effect.valueOf(plugin.getConfigHandler().getString("FillAction.Effect.Type")), plugin.getConfigHandler().getConfig().getInt("FillAction.Effect.Amount"));
+                                                                }
+                                                            }
                                                         }
-                                                    });
-                                                }
-                                                i++;
-                                            } else {
-                                                boolean progress = true;
-                                                for (Integer i : amountList[0]) {
-                                                    if (i > 0) {
-                                                        progress = false;
+                                                        if (plugin.getConfigHandler().getBoolean("FillAction.ProceedSound.Enabled")) {
+                                                            finalBlockList.get(this.i).getWorld().playSound(finalBlockList.get(this.i).getLocation(), Sound.valueOf(plugin.getConfigHandler().getString("FillAction.ProceedSound.Sound")), (float) plugin.getConfigHandler().getConfig().getDouble("FillAction.ProceedSound.Volume"), (float) plugin.getConfigHandler().getConfig().getDouble("FillAction.ProceedSound.Pitch"));
+                                                        }
+                                                        finalBlockList.get(i).getWorld().getPlayers().forEach(player -> {
+                                                            if (finalBlockList.get(i).getLocation().distance(player.getLocation()) <= 1.0 && plugin.getConfigHandler().getBoolean("FillAction.Teleport")) {
+                                                                player.teleport(player.getLocation().add(0, 1, 0));
+                                                            }
+                                                        });
                                                     }
-                                                }
-                                                if (progress && !queue.containsKey(cubeName.toUpperCase())) {
-                                                    Bukkit.getScheduler().cancelTask(taskList.get(cubeName));
-                                                    Player player = null;
-                                                    if (commandSender instanceof Player) {
-                                                        player = (Player) commandSender;
+                                                    i++;
+                                                } else {
+                                                    boolean progress = true;
+                                                    for (Integer i : amountList[0]) {
+                                                        if (i > 0) {
+                                                            progress = false;
+                                                        }
                                                     }
-                                                    plugin.getCubicListener().proof(player, cube.getPos1());
-                                                    taskList.remove(cubeName);
-                                                } else if (progress && queue.containsKey(cubeName.toUpperCase())) {
-                                                    HashMap<List<Material>, List<Integer>> mixedMap = queue.get(cubeName.toUpperCase());
-                                                    materialList[0] = mixedMap.keySet().stream().collect(Collectors.toList()).get(0);
-                                                    amountList[0] = mixedMap.values().stream().collect(Collectors.toList()).get(0);
-                                                    random[0] = new AtomicInteger(new Random().nextInt(materialList[0].size()));
-                                                    queue.get(cubeName.toUpperCase()).remove(materialList[0], amountList[0]);
-                                                    if (mixedMap.size() <= 1) {
-                                                        queue.remove(cubeName.toUpperCase());
-                                                    }
-                                                } else if (!progress) {
-                                                    if (materialList[0].size() > random[0].get()) {
-                                                        materialList[0].remove(materialList[0].get(random[0].get()));
-                                                        amountList[0].remove(amountList[0].get(random[0].get()));
-                                                        if (materialList[0].size() > 0) {
-                                                            random[0].set(new Random().nextInt(materialList[0].size()));
+                                                    if (progress && !queue.containsKey(cubeName.toUpperCase())) {
+                                                        Bukkit.getScheduler().cancelTask(taskList.get(cubeName));
+                                                        Player player = null;
+                                                        if (commandSender instanceof Player) {
+                                                            player = (Player) commandSender;
+                                                        }
+                                                        plugin.getCubicListener().proof(player, cube.getPos1());
+                                                        taskList.remove(cubeName);
+                                                    } else if (progress && queue.containsKey(cubeName.toUpperCase())) {
+                                                        HashMap<List<Material>, List<Integer>> mixedMap = queue.get(cubeName.toUpperCase());
+                                                        materialList[0] = mixedMap.keySet().stream().collect(Collectors.toList()).get(0);
+                                                        amountList[0] = mixedMap.values().stream().collect(Collectors.toList()).get(0);
+                                                        random[0] = new AtomicInteger(new Random().nextInt(materialList[0].size()));
+                                                        queue.get(cubeName.toUpperCase()).remove(materialList[0], amountList[0]);
+                                                        if (mixedMap.size() <= 1) {
+                                                            queue.remove(cubeName.toUpperCase());
+                                                        }
+                                                    } else if (!progress) {
+                                                        if (materialList[0].size() > random[0].get()) {
+                                                            materialList[0].remove(materialList[0].get(random[0].get()));
+                                                            amountList[0].remove(amountList[0].get(random[0].get()));
+                                                            if (materialList[0].size() > 0) {
+                                                                random[0].set(new Random().nextInt(materialList[0].size()));
+                                                            }
                                                         }
                                                     }
                                                 }
                                             }
+                                        }, animationTicks, animationTicks);
+                                        taskList.put(cubeName, task);
+                                    }else{
+                                        if (plugin.getConfigHandler().getBoolean("FillAction.ProceedSound.Enabled")) {
+                                            playerList.forEach(player -> player.playSound(player.getLocation(), Sound.valueOf(plugin.getConfigHandler().getString("FillAction.ProceedSound.Sound")), Float.valueOf((Float) plugin.getConfigHandler().getConfig().get("FillAction.ProceedSound.Volume")), Float.valueOf((Float) plugin.getConfigHandler().getConfig().get("FillAction.ProceedSound.Pitch"))));
                                         }
-                                    }, animationTicks, animationTicks);
-                                    taskList.put(cubeName, task);
+                                        while (amountList[0].size() > random[0].get() && amountList[0].get(random[0].get()) > 0 && i < finalBlockList.size()) {
+                                            if (!plugin.getConfigHandler().getStringList("FillAction.DisabledBlocks").contains(finalBlockList.get(i).getType().toString().toUpperCase())) {
+                                                fillCube(amountList, materialList, i, random, finalBlockList);
+                                                int finalI = i;
+                                                finalBlockList.get(i).getWorld().getPlayers().forEach(player -> {
+                                                    if (finalBlockList.get(finalI).getLocation().distance(player.getLocation()) <= 1.0 && plugin.getConfigHandler().getBoolean("FillAction.Teleport")) {
+                                                        player.teleport(player.getLocation().add(0, 1, 0));
+                                                    }
+                                                });
+                                            }
+                                            i++;
+                                        }
+                                    }
                                 }
                             } else {
                                 if (plugin.getConfigHandler().getBoolean("FillAction.Queue")) {
@@ -283,6 +322,15 @@ public class CubicCommand implements CommandExecutor {
             commandSender.sendMessage("§cYou do not have the permission to use that command! §cType §eop " + commandSender.getName() + " §cinto the server-console to get permission!");
         }
         return false;
+    }
+
+    private void fillCube(List<Integer>[] amountList, List<Material>[] materialList, int i, AtomicInteger[] random, List<Block> finalBlockList) {
+        try {
+            finalBlockList.get(i).setType(materialList[0].get(random[0].get()));
+        } catch (IllegalArgumentException exception) {
+        }
+        amountList[0].set(random[0].get(), (amountList[0].get(random[0].get()) - 1));
+        random[0].set(new Random().nextInt(materialList[0].size()));
     }
 
     private boolean isInteger(String toTest) {

@@ -10,18 +10,15 @@ import de.timecoding.cc.util.CubicSettings;
 import de.timecoding.cc.util.type.Cube;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.player.PlayerCommandSendEvent;
-import org.bukkit.event.server.ServerCommandEvent;
+import org.bukkit.event.block.*;
 
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -30,6 +27,7 @@ public class CubicListener implements Listener {
 
     public CubicListener(CubicCountdown plugin) {
         this.plugin = plugin;
+        this.startChecker();
     }
 
     //WIN & LOSE COUNTER
@@ -50,45 +48,91 @@ public class CubicListener implements Listener {
 
     //
 
+    //CAUSE CHECKER
+
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        proof(event.getPlayer(), event.getBlockPlaced().getLocation());
-    }
-
-    @EventHandler
-    public void onServerCommand(ServerCommandEvent event) {
-        plugin.getCubicAPI().getCubes().forEach(cube -> {
-            proof(null, cube.blockList(true).get(0).getLocation());
-        });
-    }
-
-    @EventHandler
-    public void onBlockChange(BlockFromToEvent event) {
-        plugin.getCubicAPI().getCubes().forEach(cube -> {
-            proof(null, cube.blockList(true).get(0).getLocation());
-        });
-    }
-
-    @EventHandler
-    public void onPlayerCommand(PlayerCommandSendEvent event) {
-        plugin.getCubicAPI().getCubes().forEach(cube -> {
-            proof(event.getPlayer(), cube.blockList(true).get(0).getLocation());
-        });
+        addCause(plugin.getCubicAPI().getCubeAtLocation(event.getBlock().getLocation()), event.getPlayer());
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        proof(event.getPlayer(), event.getBlock().getLocation());
+        addCause(plugin.getCubicAPI().getCubeAtLocation(event.getBlock().getLocation()), event.getPlayer());
     }
 
-    @EventHandler
-    public void onEntityExplode(EntityExplodeEvent event) {
-        boolean stop = false;
-        for (Block block : event.blockList()) {
-            if (!stop && proof(null, block.getLocation())) {
-                stop = true;
+    //
+
+    private int checkID = -1;
+
+    private boolean checkerRunning(){
+        return (checkID != -1);
+    }
+
+    private void startChecker(){
+        if(!checkerRunning()){
+            Integer checker = 40;
+            if(plugin.getConfigHandler().keyExists("CheckerTicks")){
+                checker = plugin.getConfigHandler().getInteger("CheckerTicks");
             }
+            Integer finalChecker = checker;
+            this.checkID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    if(plugin.getConfigHandler().keyExists("CheckerTicks") && plugin.getConfigHandler().getInteger("CheckerTicks") != finalChecker){
+                        stopChecker();
+                        startChecker();
+                    }
+                    plugin.getCubicAPI().getCubes().forEach(cube -> {
+                        if(proofForAll(lastCauses.get(cube.getName()), cube.getPos1())){
+                            clearCauses(cube);
+                        }
+                    });;
+                }
+            },checker, checker);
         }
+    }
+
+    private HashMap<String, List<Player>> lastCauses = new HashMap<>();
+
+    private void addCause(Cube cube, Player player){
+        if(cube != null) {
+            List<Player> last = new ArrayList<>();
+            if (lastCauses.containsKey(cube.getName())) {
+                last = lastCauses.get(cube.getName());
+                lastCauses.remove(cube.getName());
+            }
+            if (!last.contains(player)) {
+                last.add(player);
+            }
+            lastCauses.put(cube.getName(), last);
+        }
+    }
+
+    private void clearCauses(Cube cube){
+        if(lastCauses.containsKey(cube.getName())){
+            lastCauses.remove(cube.getName());
+        }
+    }
+
+    private void stopChecker(){
+        if(checkerRunning()){
+            Bukkit.getScheduler().cancelTask(checkID);
+            checkID = -1;
+        }
+    }
+
+    public boolean proofForAll(List<Player> playerList, Location origin){
+        AtomicBoolean proofed = new AtomicBoolean(false);
+        if(playerList != null && playerList.size() > 0) {
+            playerList.forEach(player -> {
+                if(!proofed.get() && proof(player, origin)){
+                    proofed.set(true);
+                }
+            });
+        }else{
+            proof(null, origin);
+        }
+        return proofed.get();
     }
 
     public boolean proof(Player player, Location origin) {
