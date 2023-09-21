@@ -136,7 +136,7 @@ public class CubicSettings {
 
     public String getTitle(CubicStateType cubicStateType) {
         if (hasTitle(cubicStateType)) {
-            return getTitleMap().get(cubicStateType).replace("%win_counter%", plugin.getCubicAPI().getWins(cube).toString()).replace("%lose_counter%", plugin.getCubicAPI().getLoses(cube).toString()).replace("%games_played%", plugin.getCubicAPI().getGamesPlayed(cube).toString());
+            return getTitleMap().get(cubicStateType).replace("%win_counter%", plugin.getCubicAPI().getTotalWins(cube).toString()).replace("%lose_counter%", plugin.getCubicAPI().getTotalLoses(cube).toString()).replace("%games_played%", plugin.getCubicAPI().getTotalGamesPlayed(cube).toString());
         } else {
             return "";
         }
@@ -156,7 +156,7 @@ public class CubicSettings {
 
     public String getSubtitle(CubicStateType cubicStateType) {
         if (hasSubtitle(cubicStateType)) {
-            return getSubTitleMap().get(cubicStateType).replace("%win_counter%", plugin.getCubicAPI().getWins(cube).toString()).replace("%lose_counter%", plugin.getCubicAPI().getLoses(cube).toString()).replace("%games_played%", plugin.getCubicAPI().getGamesPlayed(cube).toString());
+            return getSubTitleMap().get(cubicStateType).replace("%win_counter%", plugin.getCubicAPI().getTotalWins(cube).toString()).replace("%lose_counter%", plugin.getCubicAPI().getTotalLoses(cube).toString()).replace("%games_played%", plugin.getCubicAPI().getTotalGamesPlayed(cube).toString());
         } else {
             return "";
         }

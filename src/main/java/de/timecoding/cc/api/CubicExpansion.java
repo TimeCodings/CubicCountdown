@@ -34,24 +34,45 @@ public class CubicExpansion extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer player, String params) {
-        if (params.startsWith("win_counter_")) {
-            String cubeName = params.substring(12);
+        if (params.startsWith("total_win_counter_")) {
+            String cubeName = params.substring(18);
             if (plugin.getCubicAPI().cubeNameExists(cubeName)) {
-                return plugin.getCubicAPI().getWins(cubeName).toString();
+                return plugin.getCubicAPI().getTotalWins(cubeName).toString();
             } else {
                 return null;
             }
-        } else if (params.startsWith("lose_counter_")) {
-            String cubeName = params.substring(13);
+        } else if (params.startsWith("total_lose_counter_")) {
+            String cubeName = params.substring(19);
             if (plugin.getCubicAPI().cubeNameExists(cubeName)) {
-                return plugin.getCubicAPI().getLoses(cubeName).toString();
+                return plugin.getCubicAPI().getTotalLoses(cubeName).toString();
             } else {
                 return null;
             }
-        } else if (params.startsWith("games_played_")) {
-            String cubeName = params.substring(13);
+        } else if (params.startsWith("total_games_played_")) {
+            String cubeName = params.substring(19);
             if (plugin.getCubicAPI().cubeNameExists(cubeName)) {
-                return plugin.getCubicAPI().getGamesPlayed(cubeName).toString();
+                return plugin.getCubicAPI().getTotalGamesPlayed(cubeName).toString();
+            } else {
+                return null;
+            }
+        }else if (params.startsWith("session_win_counter_")) {
+            String cubeName = params.substring(20);
+            if (plugin.getCubicAPI().cubeNameExists(cubeName)) {
+                return plugin.getCubicAPI().getSessionWins(cubeName).toString();
+            } else {
+                return null;
+            }
+        } else if (params.startsWith("session_lose_counter_")) {
+            String cubeName = params.substring(21);
+            if (plugin.getCubicAPI().cubeNameExists(cubeName)) {
+                return plugin.getCubicAPI().getSessionLoses(cubeName).toString();
+            } else {
+                return null;
+            }
+        } else if (params.startsWith("session_games_played_")) {
+            String cubeName = params.substring(21);
+            if (plugin.getCubicAPI().cubeNameExists(cubeName)) {
+                return plugin.getCubicAPI().getSessionGamesPlayed(cubeName).toString();
             } else {
                 return null;
             }
