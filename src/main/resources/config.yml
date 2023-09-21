@@ -129,6 +129,17 @@ ClearAction:
   #You can find all block-names here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
   DisabledBlocks:
     - BEDROCK
+#NEW in v1.2.2: Select commands which should be executed IN THE CONSOLE after a countdown ended, started or was cancelled
+Commands:
+  #This commands will be executed after the countdown was cancelled
+  OnCountdownCancel:
+    - ""
+  #This commands will be executed after the countdown was started
+  OnCountdownStart:
+    - ""
+  #This commands will be executed after the countdown ended
+  OnCountdownEnd:
+    - ""
 #NEW IN v1.2: Create an actionbar, which can show the win, games played and the lose counter
 #when a player is near a cube
 Actionbar:

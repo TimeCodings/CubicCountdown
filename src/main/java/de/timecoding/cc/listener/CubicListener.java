@@ -30,20 +30,35 @@ public class CubicListener implements Listener {
         this.startChecker();
     }
 
-    //WIN & LOSE COUNTER
+    //WIN & LOSE COUNTER + CommandExecuter
 
     @EventHandler
     public void onCubeCountdownEnd(CubeCountdownEndEvent event) {
         if (event.getCubicSettings().getCube() != null) {
+            executeCommands("OnCountdownEnd", event.getCubicSettings().getCube().getName());
             plugin.getCubicAPI().increaseWins(event.getCubicSettings().getCube());
         }
     }
 
     @EventHandler
-    public void onCubeUnFilled(CubeCountdownCancelEvent event) {
+    public void onCubeCountdownCancel(CubeCountdownCancelEvent event) {
         if (event.getCubicSettings().getCube() != null) {
+            executeCommands("OnCountdownCancel", event.getCubicSettings().getCube().getName());
             plugin.getCubicAPI().increaseLoses(event.getCubicSettings().getCube());
         }
+    }
+
+    @EventHandler
+    public void onCubeCountdownStart(CubeCountdownStartEvent event){
+        if (event.getCubicSettings().getCube() != null) {
+            executeCommands("OnCountdownStart", event.getCubicSettings().getCube().getName());
+        }
+    }
+
+    private void executeCommands(String key, String map){
+        plugin.getConfigHandler().getStringList("Commands."+key+"").forEach(command -> {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%map%", map));
+        });
     }
 
     //
