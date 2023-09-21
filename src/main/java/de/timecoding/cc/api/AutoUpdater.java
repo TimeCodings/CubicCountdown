@@ -41,8 +41,10 @@ public class AutoUpdater {
             request.addHeader("content-type", "application/vnd.github.v3+json");
             HttpResponse result = httpClient.execute(request);
             JSONObject json = new JSONObject(EntityUtils.toString(result.getEntity(), "UTF-8"));
-            if(json != null){
+            if(json != null && json.has("tag_name")){
                 return json.get("tag_name").toString();
+            }else{
+                Bukkit.getConsoleSender().sendMessage("§cCould not fetch the newest §eCubicCountdown §crelease! You may be offline!");
             }
         } catch (IOException ex) {
             Bukkit.getConsoleSender().sendMessage("§cCould not fetch the newest §eCubicCountdown §crelease! You may be offline!");

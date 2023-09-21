@@ -103,6 +103,7 @@ FillAction:
   OnlyAir: true
   #Disable this if it shouldn't be possible to execute the fill action/animation while another is running
   Queue: true
+  #Display any effect when a new block is going to spawn
   Effect:
     Enabled: false
     #You can find all effect types here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Effect.html

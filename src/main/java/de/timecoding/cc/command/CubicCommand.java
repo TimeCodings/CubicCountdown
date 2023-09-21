@@ -255,9 +255,6 @@ public class CubicCommand implements CommandExecutor {
                                         }, animationTicks, animationTicks);
                                         taskList.put(cubeName, task);
                                     }else{
-                                        if (plugin.getConfigHandler().getBoolean("FillAction.ProceedSound.Enabled")) {
-                                            playerList.forEach(player -> player.playSound(player.getLocation(), Sound.valueOf(plugin.getConfigHandler().getString("FillAction.ProceedSound.Sound")), Float.valueOf((Float) plugin.getConfigHandler().getConfig().get("FillAction.ProceedSound.Volume")), Float.valueOf((Float) plugin.getConfigHandler().getConfig().get("FillAction.ProceedSound.Pitch"))));
-                                        }
                                         while (amountList[0].size() > random[0].get() && amountList[0].get(random[0].get()) > 0 && i < finalBlockList.size()) {
                                             if (!plugin.getConfigHandler().getStringList("FillAction.DisabledBlocks").contains(finalBlockList.get(i).getType().toString().toUpperCase())) {
                                                 fillCube(amountList, materialList, i, random, finalBlockList);
