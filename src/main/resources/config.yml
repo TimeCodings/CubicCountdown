@@ -12,6 +12,10 @@ Countdown: 10
 #THIS DISABLES THE CUBE CLEAR OPTION
 Reverse: false
 #The general sound and title settings
+#Placeholders which can be used in the titles and the actionbar:
+# %total_win_counter%, %total_lose_counter%, %total_games_played%, %total_help_counter%
+# %session_win_counter%, %session_lose_counter%, %session_games_played%, %session_help_counter%
+# %map%
 Settings:
   #Title and sound settings for the first second of the countdown
   START:
@@ -34,7 +38,7 @@ Settings:
   #Title and sound settings for the countdown ending
   END:
     Title: "&a&lG&b&la&c&lm&d&le &f&le&4&ln&2&ld&d&le&b&ld&f&l!"
-    Subtitle: "&cWins: %win_counter%"
+    Subtitle: "&cWins: %total_win_counter%"
     #You can find all sounds here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
     Sound: ENTITY_PLAYER_LEVELUP
   CUSTOM:
@@ -140,11 +144,11 @@ Commands:
   #This commands will be executed after the countdown ended
   OnCountdownEnd:
     - ""
-#NEW IN v1.2: Create an actionbar, which can show the win, games played and the lose counter
+#NEW IN v1.2: Create an actionbar, which can show the win, games played and the loose counter
 #when a player is near a cube
 Actionbar:
   Enabled: false
-  Format: "&aWins: §7%win_counter% &f| §cLoses: &7%lose_counter% &f| §eGames played: §7%games_played%"
+  Format: "&aWins: §7%total_win_counter% &f| §cLoses: &7%total_lose_counter% &f| §eGames played: §7%total_games_played%"
 #The max distance in blocks of the player to the next cube that it shows the actionbar (and maybe soon the scoreboard)
 CubeRadius: 5
 #The checker every X seconds whether a cube is full in all worlds (NEW in v1.2.1). In this option you can set how often it does this (make this number higher to prevent lag). Please note that the information is in TICKS. 20 ticks = 1 second

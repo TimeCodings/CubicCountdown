@@ -21,6 +21,8 @@ public class CubicAPI {
     private CubicCountdown plugin;
     private List<CountdownModule> countdownList = new ArrayList<>();
     private HashMap<Player, CubicSetup> setupList = new HashMap<>();
+
+    private HashMap<String, Integer> animationList = new HashMap<>();
     private int actionRunnable = -1;
 
     public CubicAPI(CubicCountdown plugin) {
@@ -46,7 +48,7 @@ public class CubicAPI {
                         Bukkit.getOnlinePlayers().forEach(player -> {
                             Cube cube = getNearestCube(player);
                             if (cube != null) {
-                                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(plugin.getConfigHandler().getString("Actionbar.Format").replace("%win_counter%", getTotalWins(cube).toString()).replace("%lose_counter%", getTotalLoses(cube).toString()).replace("%games_played%", getTotalGamesPlayed(cube).toString()).replace("%cube_name%", cube.getName().toString())));
+                                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(plugin.getCubicAPI().replaceWithPlaceholders(cube, plugin.getConfigHandler().getString("Actionbar.Format"))));
                             }
                         });
                     }
@@ -64,6 +66,22 @@ public class CubicAPI {
 
     private boolean actionbarRunning() {
         return (actionRunnable != -1);
+    }
+
+    public HashMap<String, Integer> getAnimationList() {
+        return animationList;
+    }
+
+    public String replaceWithPlaceholders(Cube cube, String title){
+        return title.replaceAll("%total_win_counter%", plugin.getCubicAPI().getTotalWins(cube).toString())
+                .replaceAll("%total_lose_counter%", plugin.getCubicAPI().getTotalLoses(cube).toString())
+                .replaceAll("%total_games_played%", plugin.getCubicAPI().getTotalGamesPlayed(cube).toString())
+                .replaceAll("%total_help_counter%", plugin.getCubicAPI().getTotalHelps(cube).toString())
+                .replaceAll("%session_win_counter%", plugin.getCubicAPI().getSessionWins(cube).toString())
+                .replaceAll("%session_lose_counter%", plugin.getCubicAPI().getSessionLoses(cube).toString())
+                .replaceAll("%session_games_played%", plugin.getCubicAPI().getSessionGamesPlayed(cube).toString())
+                .replaceAll("%session_help_counter%", plugin.getCubicAPI().getSessionHelps(cube).toString())
+                .replaceAll("%map%", cube.getName());
     }
 
     public List<Cube> getCubes() {
@@ -157,6 +175,23 @@ public class CubicAPI {
         plugin.getDataHandler().save();
     }
 
+    public Integer getTotalHelps(Cube cube) {
+        return plugin.getDataHandler().getInteger("Cube." + cube.getName() + ".HelpCounter");
+    }
+
+    public Integer getTotalHelps(String cube) {
+        return plugin.getDataHandler().getInteger("Cube." + cube.toUpperCase() + ".HelpCounter");
+    }
+
+    public void increaseTotalHelps(Cube cube) {
+        Integer integer = 1;
+        if (plugin.getDataHandler().keyExists("Cube." + cube.getName() + ".HelpCounter")) {
+            integer = (plugin.getDataHandler().getInteger("Cube." + cube.getName() + ".HelpCounter") + 1);
+        }
+        plugin.getDataHandler().getConfig().set("Cube." + cube.getName() + ".HelpCounter", integer);
+        plugin.getDataHandler().save();
+    }
+
     public Integer getTotalLoses(Cube cube) {
         return plugin.getDataHandler().getInteger("Cube." + cube.getName() + ".LoseCounter");
     }
@@ -184,6 +219,7 @@ public class CubicAPI {
 
     private HashMap<String, Integer> session_wins = new HashMap<>();
     private HashMap<String, Integer> session_loses =  new HashMap<>();
+    private HashMap<String, Integer> session_helps =  new HashMap<>();
 
     public Integer getSessionWins(Cube cube) {
         return getSessionWins(cube.getName());
@@ -203,6 +239,26 @@ public class CubicAPI {
             session_wins.put(cube.getName(), (session_wins.get(cube.getName())+1));
         }
         session_wins.put(cube.getName(), (integer));
+    }
+
+    public Integer getSessionHelps(Cube cube) {
+        return getSessionHelps(cube.getName());
+    }
+
+    public Integer getSessionHelps(String cube) {
+        if(session_helps.containsKey(cube)){
+            return session_helps.get(cube);
+        }
+        return 0;
+    }
+
+    public void increaseSessionHelps(Cube cube) {
+        Integer integer = 1;
+        if (session_helps.containsKey(cube.getName())) {
+            integer = session_helps.get(cube.getName())+1;
+            session_helps.put(cube.getName(), (session_helps.get(cube.getName())+1));
+        }
+        session_helps.put(cube.getName(), (integer));
     }
 
     public Integer getSessionLoses(Cube cube) {
@@ -241,6 +297,11 @@ public class CubicAPI {
     public void increaseLoses(Cube cube){
         increaseTotalLoses(cube);
         increaseSessionLoses(cube);
+    }
+
+    public void increaseHelpCounter(Cube cube){
+        increaseTotalHelps(cube);
+        increaseSessionHelps(cube);
     }
 
     public boolean cubeNameExists(String name) {

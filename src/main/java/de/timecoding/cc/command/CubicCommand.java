@@ -27,6 +27,7 @@ public class CubicCommand implements CommandExecutor {
 
     public CubicCommand(CubicCountdown plugin) {
         this.plugin = plugin;
+        this.taskList = plugin.getCubicAPI().getAnimationList();
     }
 
     @Override

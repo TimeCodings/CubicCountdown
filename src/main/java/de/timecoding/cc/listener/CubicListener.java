@@ -30,7 +30,7 @@ public class CubicListener implements Listener {
         this.startChecker();
     }
 
-    //WIN & LOSE COUNTER + CommandExecuter
+    //WIN & LOSE & HELP COUNTER + CommandExecuter
 
     @EventHandler
     public void onCubeCountdownEnd(CubeCountdownEndEvent event) {
@@ -45,6 +45,9 @@ public class CubicListener implements Listener {
         if (event.getCubicSettings().getCube() != null) {
             executeCommands("OnCountdownCancel", event.getCubicSettings().getCube().getName());
             plugin.getCubicAPI().increaseLoses(event.getCubicSettings().getCube());
+            if(plugin.getConfigHandler().getBoolean("Reverse")){
+                plugin.getCubicAPI().increaseHelpCounter(event.getCubicSettings().getCube());
+            }
         }
     }
 
@@ -52,6 +55,9 @@ public class CubicListener implements Listener {
     public void onCubeCountdownStart(CubeCountdownStartEvent event){
         if (event.getCubicSettings().getCube() != null) {
             executeCommands("OnCountdownStart", event.getCubicSettings().getCube().getName());
+            if(!plugin.getConfigHandler().getBoolean("Reverse")){
+                plugin.getCubicAPI().increaseHelpCounter(event.getCubicSettings().getCube());
+            }
         }
     }
 

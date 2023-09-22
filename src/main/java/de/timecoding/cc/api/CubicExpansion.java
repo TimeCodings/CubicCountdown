@@ -55,6 +55,13 @@ public class CubicExpansion extends PlaceholderExpansion {
             } else {
                 return null;
             }
+        } else if (params.startsWith("total_help_counter_")) {
+            String cubeName = params.substring(19);
+            if (plugin.getCubicAPI().cubeNameExists(cubeName)) {
+                return plugin.getCubicAPI().getTotalHelps(cubeName).toString();
+            } else {
+                return null;
+            }
         }else if (params.startsWith("session_win_counter_")) {
             String cubeName = params.substring(20);
             if (plugin.getCubicAPI().cubeNameExists(cubeName)) {
@@ -73,6 +80,13 @@ public class CubicExpansion extends PlaceholderExpansion {
             String cubeName = params.substring(21);
             if (plugin.getCubicAPI().cubeNameExists(cubeName)) {
                 return plugin.getCubicAPI().getSessionGamesPlayed(cubeName).toString();
+            } else {
+                return null;
+            }
+        } else if (params.startsWith("session_help_counter_")) {
+            String cubeName = params.substring(21);
+            if (plugin.getCubicAPI().cubeNameExists(cubeName)) {
+                return plugin.getCubicAPI().getSessionHelps(cubeName).toString();
             } else {
                 return null;
             }
