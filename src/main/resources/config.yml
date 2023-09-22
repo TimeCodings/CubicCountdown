@@ -85,8 +85,10 @@ Viewer:
     RadiusInBlocks: 10
 #Configurate the firework effect on the end of the countdown
 Firework:
-  #Enable it by setting it to "true"
-  Enabled: true
+  #Enable this to spawn a firework at the player location
+  ForPlayer: true
+  #Set this to true if the firework should also spawn at each block after the countdown ended (wish by lanzyy)
+  AtEachBlock: false
   #Set the power of the effect (1-Unlimited)
   Power: 1
   #Set the colors of the firework

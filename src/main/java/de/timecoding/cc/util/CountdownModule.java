@@ -4,8 +4,10 @@ import de.timecoding.cc.CubicCountdown;
 import de.timecoding.cc.event.CubeCountdownEndEvent;
 import de.timecoding.cc.util.type.CubicStateType;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.ArrayList;
@@ -171,15 +173,29 @@ public class CountdownModule {
     }
 
     public void detonateFirework() {
-        if (plugin.getConfigHandler().getBoolean("Firework.Enabled") && getCubicSettings().playerList().size() > 0) {
-            Firework firework = (Firework) getCubicSettings().playerList().get(0).getWorld().spawnEntity(getCubicSettings().playerList().get(0).getLocation(), EntityType.FIREWORK);
-            FireworkMeta fireworkMeta = firework.getFireworkMeta();
-            fireworkMeta.setPower(plugin.getConfigHandler().getInteger("Firework.Power"));
-            this.getFireworkEffects().forEach(fireworkEffect -> {
-                fireworkMeta.addEffect(fireworkEffect);
-            });
-            firework.setFireworkMeta(fireworkMeta);
-            firework.detonate();
+        if (plugin.getConfigHandler().getBoolean("Firework.ForPlayer") && getCubicSettings().playerList().size() > 0) {
+            for(Player player : getCubicSettings().playerList()) {
+                Firework firework = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
+                FireworkMeta fireworkMeta = firework.getFireworkMeta();
+                fireworkMeta.setPower(plugin.getConfigHandler().getInteger("Firework.Power"));
+                this.getFireworkEffects().forEach(fireworkEffect -> {
+                    fireworkMeta.addEffect(fireworkEffect);
+                });
+                firework.setFireworkMeta(fireworkMeta);
+                firework.detonate();
+            }
+        }
+        if(plugin.getConfigHandler().getBoolean("Firework.AtEachBlock")){
+            for(Block block : getCubicSettings().getCube().blockList(true)){
+                Firework firework = (Firework) block.getLocation().getWorld().spawnEntity(block.getLocation(), EntityType.FIREWORK);
+                FireworkMeta fireworkMeta = firework.getFireworkMeta();
+                fireworkMeta.setPower(plugin.getConfigHandler().getInteger("Firework.Power"));
+                this.getFireworkEffects().forEach(fireworkEffect -> {
+                    fireworkMeta.addEffect(fireworkEffect);
+                });
+                firework.setFireworkMeta(fireworkMeta);
+                firework.detonate();
+            }
         }
     }
 
