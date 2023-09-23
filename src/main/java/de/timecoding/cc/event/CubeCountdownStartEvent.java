@@ -20,9 +20,16 @@ public class CubeCountdownStartEvent extends Event implements Cancellable {
         this.cubicSettings = this.countdownModule.getCubicSettings();
     }
 
-    public boolean whileAnimation(){
+    public boolean whileFillAnimation(){
         if(cubicSettings.getCube() != null){
-            return countdownModule.getPlugin().getCubicAPI().getAnimationList().containsKey(cubicSettings.getCube().getName());
+            return countdownModule.getPlugin().getCubicAPI().getFillAnimationList().containsKey(cubicSettings.getCube().getName());
+        }
+        return false;
+    }
+
+    public boolean whileClearAnimation(){
+        if(cubicSettings.getCube() != null){
+            return countdownModule.getPlugin().getCubicAPI().getClearAnimationList().containsKey(cubicSettings.getCube().getName());
         }
         return false;
     }

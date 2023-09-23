@@ -22,25 +22,49 @@ Settings:
     Title: "&a&lThe game ends"
     Subtitle: ""
     #You can find all sounds here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
-    Sound: ENTITY_FIREWORK_ROCKET_SHOOT
+    Sound:
+      Enabled: true
+      Sound: ENTITY_FIREWORK_ROCKET_SHOOT
+      Volume: 2
+      Pitch: 2
+      #If you want to use a custom sound out of your ressourcepack, type the name in here
+      Custom: ""
   #Title format and sound settings for the countdown in general
   PROCEED:
     Title: "&e&l%seconds%"
     Subtitle: ""
     #You can find all sounds here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
-    Sound: BLOCK_NOTE_BLOCK_BASS
+    Sound:
+      Enabled: true
+      Sound: BLOCK_NOTE_BLOCK_BASS
+      Volume: 2
+      Pitch: 2
+      #If you want to use a custom sound out of your ressourcepack, type the name in here
+      Custom: ""
   #Title and sound settings which will be applied when the cube state turns from "FULL CUBE" to "PARTLY FULL CUBE"
   CANCELLED:
     Title: "&c&lCountdown cancelled!"
     Subtitle: ""
     #You can find all sounds here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
-    Sound: BLOCK_NOTE_BLOCK_BANJO
+    Sound:
+      Enabled: true
+      Sound: BLOCK_NOTE_BLOCK_BASS
+      Volume: 2
+      Pitch: 2
+      #If you want to use a custom sound out of your ressourcepack, type the name in here
+      Custom: ""
   #Title and sound settings for the countdown ending
   END:
     Title: "&a&lG&b&la&c&lm&d&le &f&le&4&ln&2&ld&d&le&b&ld&f&l!"
     Subtitle: "&cWins: %total_win_counter%"
     #You can find all sounds here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
-    Sound: ENTITY_PLAYER_LEVELUP
+    Sound:
+      Enabled: true
+      Sound: BLOCK_NOTE_BLOCK_BASS
+      Volume: 2
+      Pitch: 2
+      #If you want to use a custom sound out of your ressourcepack, type the name in here
+      Custom: ""
   CUSTOM:
     #Set custom settings for second 3
     3:
@@ -49,18 +73,34 @@ Settings:
       #Set the subtitle
       Subtitle: ""
       #Set the sound
-      Sound: BLOCK_NOTE_BLOCK_BASS
+      Sound:
+        Enabled: true
+        Sound: BLOCK_NOTE_BLOCK_BASS
+        Volume: 2
+        Pitch: 2
+        #If you want to use a custom sound out of your ressourcepack, type the name in here
+        Custom: ""
       #Set ticks, so the countdown seems slower or faster (20 ticks = 1 second)
       Ticks: 20
     2:
       Title: "&c&l2"
       Subtitle: ""
-      Sound: BLOCK_NOTE_BLOCK_BASS
+      Sound:
+        Enabled: true
+        Sound: BLOCK_NOTE_BLOCK_BASS
+        Volume: 2
+        Pitch: 2
+        Custom: ""
       Ticks: 20
     1:
       Title: "&f&l1"
       Subtitle: ""
-      Sound: BLOCK_NOTE_BLOCK_BASS
+      Sound:
+        Enabled: true
+        Sound: BLOCK_NOTE_BLOCK_BASS
+        Volume: 2
+        Pitch: 2
+        Custom: ""
       Ticks: 20
 #Disable this if the countdown should only start if the whole cube is full of blocks
 #WISH BY THE TIKFINITY COMMUNITY
@@ -97,7 +137,7 @@ Firework:
     - "RED"
     - "ORANGE"
     - "YELLOW"
-#NEW IN v1.2: In this version you're now able to fill out/(clear a cube) (with blocks)
+#NEW IN v1.2: In this version you're now able to fill out a cube with blocks
 FillAction:
   #Disable the animation by setting this to "false"
   Animation: true
@@ -126,11 +166,35 @@ FillAction:
     Sound: BLOCK_NOTE_BLOCK_BELL
     Volume: 1
     Pitch: 2
+    Custom: ""
   #Decide if some block-"types" should be disabled/ignored
   #You can find all block-names here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
   DisabledBlocks:
     - BEDROCK
+#NEW IN v1.2: In this version you're now able to clear a cube
 ClearAction:
+  #Enable the animation by setting this to "true"
+  Animation: false
+  #Set the ticks (20 ticks = 1 second) how fast the animation should be played
+  AnimationTicks: 2
+  #Display any effect when a new block is going to spawn
+  Effect:
+    Enabled: false
+    #You can find all effect types here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Effect.html
+    Type: MOBSPAWNER_FLAMES
+    #The particle amount
+    Amount: 0
+    #Set how many blocks the effect can be away
+    BlocksAhead: 0
+  #A sound which will be played every time an animation block was set
+  ProceedSound:
+    #Set this to true if you want to enable it
+    Enabled: false
+    #You can find all sounds here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
+    Sound: BLOCK_NOTE_BLOCK_BELL
+    Volume: 1
+    Pitch: 2
+    Custom: ""
   #Decide if some block-"types" should be disabled/ignored
   #You can find all block-names here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
   DisabledBlocks:
@@ -161,7 +225,7 @@ bStats: true
 #Set this to false if you don't want that the plugin gets updated automatically
 AutoUpdater: true
 #DO NOT CHANGE THIS
-config-version: 1.2.1
+config-version: 1.2.2
 
 #######################################################################################
 # A SETTING IS MISSING FOR YOU? NO PROBLEM, JOIN OUR DISCORD AND WE'LL ADD IT FOR YOU #

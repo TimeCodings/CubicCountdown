@@ -68,12 +68,16 @@ public class CountdownModule {
                                 }
                                 sendTitle(plugin.getConfigHandler().getString(base + "Title").replace("%seconds%", String.valueOf(seconds)), subtitle);
                             }
-                            if (Sound.valueOf(plugin.getConfigHandler().getString(base + "Sound")) != null) {
-                                playSound(Sound.valueOf(plugin.getConfigHandler().getString(base + "Sound")));
-                            }
-                            if (plugin.getConfigHandler().keyExists(base + "Ticks")) {
-                                extraTicks(base);
-                            }
+                            cubicSettings.playerList().forEach(player -> {
+                                if (plugin.getConfigHandler().getString(base+"Sound.Custom").equalsIgnoreCase("")) {
+                                    player.playSound(player.getLocation(), Sound.valueOf(plugin.getConfigHandler().getString(base+"Sound.Sound")), (float) plugin.getConfigHandler().getConfig().getDouble(base+".Sound.Volume"), (float) plugin.getConfigHandler().getConfig().getDouble(base + ".Sound.Pitch"));
+                                }else{
+                                    player.playSound(player.getLocation(), plugin.getConfigHandler().getString(base+"Sound.Custom"), (float) plugin.getConfigHandler().getConfig().getDouble(base+".Sound.Volume"), (float) plugin.getConfigHandler().getConfig().getDouble(base + ".Sound.Pitch"));
+                                }
+                                if (plugin.getConfigHandler().keyExists(base + "Ticks")) {
+                                    extraTicks(base);
+                                }
+                            });
                         } else {
                             sendTitle(cubicSettings.getTitle(CubicStateType.PROCEED).replace("%seconds%", String.valueOf(seconds)), cubicSettings.getSubtitle(CubicStateType.PROCEED));
                             playSound(CubicStateType.PROCEED);
@@ -90,6 +94,7 @@ public class CountdownModule {
                                     firework.detonate();
                                 });
                                 clearCube();
+                                plugin.getCubicListener().executeCommands("OnCountdownEnd", event.getCubicSettings().getCube().getName());
                                 stop();
                             }
                         }
@@ -113,7 +118,11 @@ public class CountdownModule {
     private void playSound(CubicStateType cubicStateType) {
         cubicSettings.playerList().forEach(player -> {
             if (cubicSettings.hasSound(cubicStateType)) {
-                player.playSound(player.getLocation(), cubicSettings.getSound(cubicStateType), 2, 2);
+                if (plugin.getConfigHandler().getString("Settings." + cubicStateType.toString().toUpperCase() + ".Sound.Custom").equalsIgnoreCase("")) {
+                    player.playSound(player.getLocation(), cubicSettings.getSound(cubicStateType), (float) plugin.getConfigHandler().getConfig().getDouble("Settings." + cubicStateType.toString().toUpperCase() + ".Sound.Volume"), (float) plugin.getConfigHandler().getConfig().getDouble("Settings." + cubicStateType.toString().toUpperCase() + ".Sound.Pitch"));
+                }else{
+                    player.playSound(player.getLocation(), plugin.getConfigHandler().getString("Settings." + cubicStateType.toString().toUpperCase() + ".Sound.Custom"), (float) plugin.getConfigHandler().getConfig().getDouble("Settings." + cubicStateType.toString().toUpperCase() + ".Sound.Volume"), (float) plugin.getConfigHandler().getConfig().getDouble("Settings." + cubicStateType.toString().toUpperCase() + ".Sound.Pitch"));
+                }
             }
         });
     }

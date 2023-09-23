@@ -22,7 +22,8 @@ public class CubicAPI {
     private List<CountdownModule> countdownList = new ArrayList<>();
     private HashMap<Player, CubicSetup> setupList = new HashMap<>();
 
-    private HashMap<String, Integer> animationList = new HashMap<>();
+    private HashMap<String, Integer> fillAnimationList = new HashMap<>();
+    private HashMap<String, Integer> clearAnimationList = new HashMap<>();
     private int actionRunnable = -1;
 
     public CubicAPI(CubicCountdown plugin) {
@@ -68,8 +69,12 @@ public class CubicAPI {
         return (actionRunnable != -1);
     }
 
-    public HashMap<String, Integer> getAnimationList() {
-        return animationList;
+    public HashMap<String, Integer> getFillAnimationList() {
+        return fillAnimationList;
+    }
+
+    public HashMap<String, Integer> getClearAnimationList() {
+        return clearAnimationList;
     }
 
     public String replaceWithPlaceholders(Cube cube, String title){
@@ -236,7 +241,6 @@ public class CubicAPI {
         Integer integer = 1;
         if (session_wins.containsKey(cube.getName())) {
             integer = session_wins.get(cube.getName())+1;
-            session_wins.put(cube.getName(), (session_wins.get(cube.getName())+1));
         }
         session_wins.put(cube.getName(), (integer));
     }
@@ -256,7 +260,6 @@ public class CubicAPI {
         Integer integer = 1;
         if (session_helps.containsKey(cube.getName())) {
             integer = session_helps.get(cube.getName())+1;
-            session_helps.put(cube.getName(), (session_helps.get(cube.getName())+1));
         }
         session_helps.put(cube.getName(), (integer));
     }
@@ -276,7 +279,6 @@ public class CubicAPI {
         Integer integer = 1;
         if (session_loses.containsKey(cube.getName())) {
             integer = session_loses.get(cube.getName())+1;
-            session_loses.put(cube.getName(), (session_loses.get(cube.getName())+1));
         }
         session_loses.put(cube.getName(), (integer));
     }

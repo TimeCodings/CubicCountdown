@@ -35,7 +35,6 @@ public class CubicListener implements Listener {
     @EventHandler
     public void onCubeCountdownEnd(CubeCountdownEndEvent event) {
         if (event.getCubicSettings().getCube() != null) {
-            executeCommands("OnCountdownEnd", event.getCubicSettings().getCube().getName());
             plugin.getCubicAPI().increaseWins(event.getCubicSettings().getCube());
         }
     }
@@ -45,7 +44,7 @@ public class CubicListener implements Listener {
         if (event.getCubicSettings().getCube() != null) {
             executeCommands("OnCountdownCancel", event.getCubicSettings().getCube().getName());
             plugin.getCubicAPI().increaseLoses(event.getCubicSettings().getCube());
-            if(plugin.getConfigHandler().getBoolean("Reverse")){
+            if(!plugin.getConfigHandler().getBoolean("Reverse") && event.whileFillAnimation() || plugin.getConfigHandler().getBoolean("Reverse") && event.whileClearAnimation()){
                 plugin.getCubicAPI().increaseHelpCounter(event.getCubicSettings().getCube());
             }
         }
@@ -55,14 +54,17 @@ public class CubicListener implements Listener {
     public void onCubeCountdownStart(CubeCountdownStartEvent event){
         if (event.getCubicSettings().getCube() != null) {
             executeCommands("OnCountdownStart", event.getCubicSettings().getCube().getName());
-            if(!plugin.getConfigHandler().getBoolean("Reverse")){
+            if(!plugin.getConfigHandler().getBoolean("Reverse") && event.whileFillAnimation() || plugin.getConfigHandler().getBoolean("Reverse") && event.whileClearAnimation()){
                 plugin.getCubicAPI().increaseHelpCounter(event.getCubicSettings().getCube());
             }
         }
     }
 
-    private void executeCommands(String key, String map){
+    public void executeCommands(String key, String map){
         plugin.getConfigHandler().getStringList("Commands."+key+"").forEach(command -> {
+            if(command.startsWith(" ") || command.startsWith("/")){
+                command = command.substring(0, command.length()-1);
+            }
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%map%", map));
         });
     }
@@ -184,22 +186,40 @@ public class CubicListener implements Listener {
                             if (player != null && !cubicSettings.playerList().contains(player)) {
                                 cubicSettings.addPlayer(player);
                             }
-                            CountdownModule countdownModule = new CountdownModule(cubicSettings);
-                            CubeCountdownStartEvent event = new CubeCountdownStartEvent(player, countdownModule);
-                            Bukkit.getPluginManager().callEvent(event);
-                            if (!event.isCancelled()) {
-                                countdownModule.start();
-                                r.set(true);
+                            if(atomicCube.get() != null && plugin.getCubicAPI().getCountdownModuleFromCube(atomicCube.get()) == null) {
+                                CountdownModule countdownModule = new CountdownModule(cubicSettings);
+                                CubeCountdownStartEvent event = new CubeCountdownStartEvent(player, countdownModule);
+                                Bukkit.getPluginManager().callEvent(event);
+                                if (!event.isCancelled()) {
+                                    countdownModule.start();
+                                    r.set(true);
+                                }
+                                if(plugin.getConfigHandler().getBoolean("Reverse") && plugin.getCubicAPI().getClearAnimationList().containsKey(atomicCube.get().getName())) {
+                                    Bukkit.getScheduler().cancelTask(plugin.getCubicAPI().getClearAnimationList().get(atomicCube.get().getName()));
+                                    plugin.getCubicAPI().getClearAnimationList().remove(atomicCube.get().getName());
+                                }else if(plugin.getCubicAPI().getFillAnimationList().containsKey(atomicCube.get().getName())){
+                                    Bukkit.getScheduler().cancelTask(plugin.getCubicAPI().getFillAnimationList().get(atomicCube.get().getName()));
+                                    plugin.getCubicAPI().getFillAnimationList().remove(atomicCube.get().getName());
+                                }
                             }
                         } else if (!reverse && atomicCube.get() != null && !atomicCube.get().filledOut() || reverse && atomicCube.get() != null && !atomicCube.get().empty()) {
                             try {
                                 plugin.getCountdownList().forEach(countdownModule -> {
                                     if (countdownModule.getCubicSettings().getCube() != null && countdownModule.getCubicSettings().getCube().isSimilar(atomicCube.get())) {
-                                        CubeCountdownCancelEvent event = new CubeCountdownCancelEvent(player, countdownModule);
-                                        Bukkit.getPluginManager().callEvent(event);
-                                        if (!event.isCancelled()) {
-                                            countdownModule.cancel();
-                                            r.set(true);
+                                        if(atomicCube.get() != null && plugin.getCubicAPI().getCountdownModuleFromCube(atomicCube.get()) != null) {
+                                            CubeCountdownCancelEvent event = new CubeCountdownCancelEvent(player, countdownModule);
+                                            Bukkit.getPluginManager().callEvent(event);
+                                            if (!event.isCancelled()) {
+                                                countdownModule.cancel();
+                                                r.set(true);
+                                            }
+                                            if(!plugin.getConfigHandler().getBoolean("Reverse") && plugin.getCubicAPI().getClearAnimationList().containsKey(atomicCube.get().getName())) {
+                                                Bukkit.getScheduler().cancelTask(plugin.getCubicAPI().getClearAnimationList().get(atomicCube.get().getName()));
+                                                plugin.getCubicAPI().getClearAnimationList().remove(atomicCube.get().getName());
+                                            }else if(plugin.getCubicAPI().getFillAnimationList().containsKey(atomicCube.get().getName())){
+                                                Bukkit.getScheduler().cancelTask(plugin.getCubicAPI().getFillAnimationList().get(atomicCube.get().getName()));
+                                                plugin.getCubicAPI().getFillAnimationList().remove(atomicCube.get().getName());
+                                            }
                                         }
                                     }
                                 });
@@ -207,7 +227,6 @@ public class CubicListener implements Listener {
                             } catch (ConcurrentModificationException exception) {
                             }
                         }
-
                     }
                 });
             }
