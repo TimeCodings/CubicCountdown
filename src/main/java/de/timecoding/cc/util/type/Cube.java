@@ -76,30 +76,32 @@ public class Cube {
     }
 
     public boolean filledOut() {
-        AtomicBoolean filledOut = new AtomicBoolean(true);
-        AtomicInteger highestY = new AtomicInteger();
-        List<Block> highestList = new ArrayList<>();
-        blockList(true).forEach(block -> {
-            if (block.getLocation().getBlockY() > highestY.get()) {
-                highestY.set(block.getLocation().getBlockY());
-                highestList.clear();
-                highestList.add(block);
-            } else if (block.getLocation().getBlockY() == highestY.get()) {
-                highestList.add(block);
-            }
-            if (block == null || block.getType() == Material.AIR) {
-                filledOut.set(false);
-            }
-        });
-        if (plugin.getConfigHandler().getBoolean("StartWhenFullFirstLayer") || !plugin.getConfigHandler().keyExists("StartWhenFullFirstLayer")) {
-            filledOut.set(true);
-            highestList.forEach(block -> {
-                if (block == null || block.getType() == Material.AIR) {
-                    filledOut.set(false);
+        boolean startWhenFullFirstLayer = plugin.getConfigHandler().getBoolean("StartWhenFullFirstLayer");
+
+        if (startWhenFullFirstLayer) {
+            AtomicBoolean filledOut = new AtomicBoolean(true);
+            int topBlockX = Math.max(pos1.getBlockX(), pos2.getBlockX());
+            int bottomBlockX = Math.min(pos1.getBlockX(), pos2.getBlockX());
+            int topBlockZ = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
+            int bottomBlockZ = Math.min(pos1.getBlockZ(), pos2.getBlockZ());
+            int topBlockY = Math.max(pos1.getBlockY(), pos2.getBlockY());
+
+            for (int x = bottomBlockX; x <= topBlockX; x++) {
+                for (int z = bottomBlockZ; z <= topBlockZ; z++) {
+                    Block block = pos1.getWorld().getBlockAt(x, topBlockY, z);
+                    if (block == null || block.getType() == Material.AIR) {
+                        filledOut.set(false);
+                        break;
+                    }
                 }
-            });
+                if (!filledOut.get()) {
+                    break;
+                }
+            }
+            return filledOut.get();
+        } else {
+            return blockList(true).stream().noneMatch(block -> block == null || block.getType() == Material.AIR);
         }
-        return filledOut.get();
     }
 
     public boolean empty() {
