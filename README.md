@@ -30,9 +30,14 @@ COMMAND)
 **PlaceholderAPI Support:**
 <br>You want to use the CubicCountdown statistics (like the wins, loses or games played) in another plugin (like a scoreboard plugin)? Now it is possible! If you're using a plugin which supports the PlaceholderAPI (the PlaceholderAPI plugin needs to be installed too), you're now able to use these placeholders in it:
 <br>
-<br>*Show the number of wins on a specific cube/map:* **%cc_win_counter_MAPNAME%**
-<br>*Show the number of loses on a specific cube/map:* **%cc_lose_counter_MAPNAME%**
-<br>*Show the number of games you played on a specific cube/map:* **%cc_games_played_MAPNAME%**
+<br>*Show the number of total wins on a specific cube/map:* **%cc_total_win_counter_MAPNAME%**
+<br>*Show the number of session wins on a specific cube/map:* **%cc_session_win_counter_MAPNAME%**
+<br>*Show the number of total loses on a specific cube/map:* **%cc_total_lose_counter_MAPNAME%**
+<br>*Show the number of session loses on a specific cube/map:* **%cc_session_lose_counter_MAPNAME%**
+<br>*Show the number of total games played on a specific cube/map:* **%cc_total_games_played_MAPNAME%**
+<br>*Show the number of session games played on a specific cube/map:* **%cc_session_games_played_MAPNAME%**
+<br>*Show the number of total helps on a specific cube/map:* **%cc_total_help_counter_MAPNAME%**
+<br>*Show the number of session helps on a specific cube/map:* **%cc_session_help_counter_MAPNAME%**
 <br>
 <br>**By the way:** If you're using version 1.2.0 or higher, you're also able to use placeholders from other plugins in the titles of the CubicCountdown plugin
 
