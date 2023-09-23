@@ -53,8 +53,8 @@ from the releases tab to the build path of your project (in your IDEA). After th
 <br> **COMING SOON**
 
 **Tutorials:**
-<br>English Tutorial by TikTokLive with Harry: 
-<br>Spanish Tutorial:
+<br>English Tutorial by TikTokLive with Harry: https://www.youtube.com/watch?v=7I4ENO1Km4Q
+<br>Spanish Tutorial by thanitoASMR: https://www.youtube.com/watch?v=CkP_1YHGhW8
 
 **Support:** <br>
 You got any wishes or found any bug? Feel free to join my discord or open an issue on this github page: https://discord.tikmc.de/
