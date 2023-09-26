@@ -62,10 +62,12 @@ public class CubicListener implements Listener {
 
     public void executeCommands(String key, String map){
         plugin.getConfigHandler().getStringList("Commands."+key+"").forEach(command -> {
-            if(command.startsWith(" ") || command.startsWith("/")){
-                command = command.substring(0, command.length()-1);
+            if(command.length() > 0) {
+                if (command.startsWith(" ") || command.startsWith("/")) {
+                    command = command.substring(0, command.length() - 1);
+                }
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%map%", map));
             }
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%map%", map));
         });
     }
 
@@ -148,17 +150,17 @@ public class CubicListener implements Listener {
         AtomicBoolean proofed = new AtomicBoolean(false);
         if(playerList != null && playerList.size() > 0) {
             playerList.forEach(player -> {
-                if(!proofed.get() && proof(player, origin)){
+                if(!proofed.get() && proof(player, origin, false)){
                     proofed.set(true);
                 }
             });
         }else{
-            proof(null, origin);
+            proof(null, origin, false);
         }
         return proofed.get();
     }
 
-    public boolean proof(Player player, Location origin) {
+    public boolean proof(Player player, Location origin, boolean commandOrigin) {
         AtomicBoolean r = new AtomicBoolean(false);
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
@@ -226,6 +228,10 @@ public class CubicListener implements Listener {
                                 //TODO
                             } catch (ConcurrentModificationException exception) {
                             }
+                        }
+                        if(commandOrigin){
+                            plugin.getCubicAPI().getClearAnimationList().remove(atomicCube.get().getName());
+                            plugin.getCubicAPI().getFillAnimationList().remove(atomicCube.get().getName());
                         }
                     }
                 });

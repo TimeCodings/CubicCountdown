@@ -144,7 +144,7 @@ public class CubicCommand implements CommandExecutor {
                                                 if (commandSender instanceof Player) {
                                                     player = (Player) commandSender;
                                                 }
-                                                plugin.getCubicListener().proof(player, cube.getPos1());
+                                                plugin.getCubicListener().proof(player, cube.getPos1(), true);
                                             }
                                         }
                                     }, animationTicks, animationTicks);
@@ -165,7 +165,7 @@ public class CubicCommand implements CommandExecutor {
                             if (commandSender instanceof Player) {
                                 player = (Player) commandSender;
                             }
-                            plugin.getCubicListener().proof(player, cube.getPos1());
+                            plugin.getCubicListener().proof(player, cube.getPos1(), true);
                             commandSender.sendMessage("§aSuccessfully cleared the whole area in the cube §e" + cubeName);
                         }
                     } else {
@@ -176,7 +176,7 @@ public class CubicCommand implements CommandExecutor {
                 }
             } else if (strings.length == 4) {
                 if (strings[0].equalsIgnoreCase("fill")) {
-                    String cubeName = strings[1];
+                    String cubeName = strings[1].toUpperCase();
                     if (plugin.getCubicAPI().cubeNameExists(cubeName)) {
                         List<String> typeList = Arrays.stream(strings[2].split(",")).collect(Collectors.toList());
                         final List<Integer>[] amountList = new List[]{new ArrayList<>()};
@@ -298,14 +298,14 @@ public class CubicCommand implements CommandExecutor {
                                                             if (commandSender instanceof Player) {
                                                                 player = (Player) commandSender;
                                                             }
-                                                            plugin.getCubicListener().proof(player, cube.getPos1());
+                                                            plugin.getCubicListener().proof(player, cube.getPos1(), true);
                                                         } else if (progress && queue.containsKey(cubeName.toUpperCase())) {
                                                             HashMap<List<Material>, List<Integer>> mixedMap = queue.get(cubeName.toUpperCase());
                                                             materialList[0] = mixedMap.keySet().stream().collect(Collectors.toList()).get(0);
                                                             amountList[0] = mixedMap.values().stream().collect(Collectors.toList()).get(0);
                                                             random[0] = new AtomicInteger(new Random().nextInt(materialList[0].size()));
                                                             queue.get(cubeName.toUpperCase()).remove(materialList[0], amountList[0]);
-                                                            if (mixedMap.size() <= 1) {
+                                                            if (mixedMap.size() < 1) {
                                                                 queue.remove(cubeName.toUpperCase());
                                                             }
                                                         } else if (!progress) {
@@ -339,7 +339,7 @@ public class CubicCommand implements CommandExecutor {
                                             if (commandSender instanceof Player) {
                                                 player = (Player) commandSender;
                                             }
-                                            plugin.getCubicListener().proof(player, cube.getPos1());
+                                            plugin.getCubicListener().proof(player, cube.getPos1(), true);
                                         }
                                     }
                                 } else {

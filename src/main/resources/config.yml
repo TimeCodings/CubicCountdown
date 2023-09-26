@@ -200,6 +200,7 @@ ClearAction:
   DisabledBlocks:
     - BEDROCK
 #NEW in v1.2.2: Select commands which should be executed IN THE CONSOLE after a countdown ended, started or was cancelled
+#Placeholders: %map%
 Commands:
   #This commands will be executed after the countdown was cancelled
   OnCountdownCancel:
