@@ -35,13 +35,13 @@ public class CubicCompleter implements TabCompleter {
                 complete.add("simulate");
                 complete.add("setEntry");
                 complete.add("help");
-                if(strings[0].length() > 0) {
+                if (strings[0].length() > 0) {
                     complete.forEach(s1 -> {
                         if (s1.contains(strings[0])) {
                             completer.add(s1);
                         }
                     });
-                }else{
+                } else {
                     completer.addAll(complete);
                 }
             } else if (strings.length == 2) {
@@ -51,27 +51,27 @@ public class CubicCompleter implements TabCompleter {
                     plugin.getCubicAPI().getCubes().forEach(cube -> completer.add(cube.getName()));
                 } else if (strings[0].equalsIgnoreCase("setEntry") || strings[0].equalsIgnoreCase("set")) {
                     plugin.getConfigHandler().getConfig().getKeys(true).forEach(string -> {
-                        if(string.length() > 0 && string.contains(strings[1]) || strings[1].length() == 0){
+                        if (string.length() > 0 && string.contains(strings[1]) || strings[1].length() == 0) {
                             completer.add(string);
                         }
                     });
                     plugin.getDataHandler().getConfig().getKeys(true).forEach(string -> {
-                        if(string.length() > 0 && string.contains(strings[1]) || strings[1].length() == 0){
+                        if (string.length() > 0 && string.contains(strings[1]) || strings[1].length() == 0) {
                             completer.add(string);
                         }
                     });
-                }else if(strings[0].equalsIgnoreCase("simulate")){
+                } else if (strings[0].equalsIgnoreCase("simulate")) {
                     complete.clear();
                     complete.add("win");
                     complete.add("lose");
                     complete.add("help");
-                    if(strings[1].length() > 0) {
+                    if (strings[1].length() > 0) {
                         complete.forEach(s1 -> {
                             if (s1.contains(strings[0])) {
                                 completer.add(s1);
                             }
                         });
-                    }else{
+                    } else {
                         completer.addAll(complete);
                     }
                 }
@@ -86,7 +86,7 @@ public class CubicCompleter implements TabCompleter {
                                 matList[0] = matList[0] + string + ",";
                             }
                         });
-                        if(matList[0].equalsIgnoreCase("")){
+                        if (matList[0].equalsIgnoreCase("")) {
                             matList[0] = value;
                         }
                         Arrays.stream(Material.values()).forEach(material -> completer.add(matList[0] + material.toString().toLowerCase()));
@@ -97,8 +97,8 @@ public class CubicCompleter implements TabCompleter {
                     if (plugin.getConfigHandler().keyExists(strings[1])) {
                         completer.add(plugin.getConfigHandler().getConfig().get(strings[1]).toString());
                     }
-                }else if(strings[0].equalsIgnoreCase("simulate")){
-                    if(strings[1].equalsIgnoreCase("win") || strings[1].equalsIgnoreCase("lose") || strings[1].equalsIgnoreCase("help")){
+                } else if (strings[0].equalsIgnoreCase("simulate")) {
+                    if (strings[1].equalsIgnoreCase("win") || strings[1].equalsIgnoreCase("lose") || strings[1].equalsIgnoreCase("help")) {
                         plugin.getCubicAPI().getCubes().forEach(cube -> completer.add(cube.getName()));
                     }
                 }
@@ -106,16 +106,16 @@ public class CubicCompleter implements TabCompleter {
                 if (strings[0].equalsIgnoreCase("fill")) {
                     AtomicReference<String> after = new AtomicReference<>("");
                     String value = strings[2];
-                    if(value.contains(",")){
+                    if (value.contains(",")) {
                         String[] split = value.split(",");
                         Arrays.stream(split).forEach(string -> {
                             after.set(after + "PLACE, ");
                         });
-                    }else{
+                    } else {
                         after.set("PLACE, ");
                     }
-                    for(int i = 1; i < 50; i++){
-                        completer.add(after.get().substring(0, after.get().length()-2).replaceAll("PLACE", String.valueOf(i)));
+                    for (int i = 1; i < 50; i++) {
+                        completer.add(after.get().substring(0, after.get().length() - 2).replaceAll("PLACE", String.valueOf(i)));
                     }
                 }
             }

@@ -69,10 +69,10 @@ public class CountdownModule {
                                 sendTitle(plugin.getConfigHandler().getString(base + "Title").replace("%seconds%", String.valueOf(seconds)), subtitle);
                             }
                             cubicSettings.playerList().forEach(player -> {
-                                if (plugin.getConfigHandler().getString(base+"Sound.Custom").equalsIgnoreCase("")) {
-                                    player.playSound(player.getLocation(), Sound.valueOf(plugin.getConfigHandler().getString(base+"Sound.Sound")), (float) plugin.getConfigHandler().getConfig().getDouble(base+".Sound.Volume"), (float) plugin.getConfigHandler().getConfig().getDouble(base + ".Sound.Pitch"));
-                                }else{
-                                    player.playSound(player.getLocation(), plugin.getConfigHandler().getString(base+"Sound.Custom"), (float) plugin.getConfigHandler().getConfig().getDouble(base+".Sound.Volume"), (float) plugin.getConfigHandler().getConfig().getDouble(base + ".Sound.Pitch"));
+                                if (plugin.getConfigHandler().getString(base + "Sound.Custom").equalsIgnoreCase("")) {
+                                    player.playSound(player.getLocation(), Sound.valueOf(plugin.getConfigHandler().getString(base + "Sound.Sound")), (float) plugin.getConfigHandler().getConfig().getDouble(base + ".Sound.Volume"), (float) plugin.getConfigHandler().getConfig().getDouble(base + ".Sound.Pitch"));
+                                } else {
+                                    player.playSound(player.getLocation(), plugin.getConfigHandler().getString(base + "Sound.Custom"), (float) plugin.getConfigHandler().getConfig().getDouble(base + ".Sound.Volume"), (float) plugin.getConfigHandler().getConfig().getDouble(base + ".Sound.Pitch"));
                                 }
                                 if (plugin.getConfigHandler().keyExists(base + "Ticks")) {
                                     extraTicks(base);
@@ -120,7 +120,7 @@ public class CountdownModule {
             if (cubicSettings.hasSound(cubicStateType)) {
                 if (plugin.getConfigHandler().getString("Settings." + cubicStateType.toString().toUpperCase() + ".Sound.Custom").equalsIgnoreCase("")) {
                     player.playSound(player.getLocation(), cubicSettings.getSound(cubicStateType), (float) plugin.getConfigHandler().getConfig().getDouble("Settings." + cubicStateType.toString().toUpperCase() + ".Sound.Volume"), (float) plugin.getConfigHandler().getConfig().getDouble("Settings." + cubicStateType.toString().toUpperCase() + ".Sound.Pitch"));
-                }else{
+                } else {
                     player.playSound(player.getLocation(), plugin.getConfigHandler().getString("Settings." + cubicStateType.toString().toUpperCase() + ".Sound.Custom"), (float) plugin.getConfigHandler().getConfig().getDouble("Settings." + cubicStateType.toString().toUpperCase() + ".Sound.Volume"), (float) plugin.getConfigHandler().getConfig().getDouble("Settings." + cubicStateType.toString().toUpperCase() + ".Sound.Pitch"));
                 }
             }
@@ -183,7 +183,7 @@ public class CountdownModule {
 
     public void detonateFirework() {
         if (plugin.getConfigHandler().getBoolean("Firework.ForPlayer") && getCubicSettings().playerList().size() > 0) {
-            for(Player player : getCubicSettings().playerList()) {
+            for (Player player : getCubicSettings().playerList()) {
                 Firework firework = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
                 FireworkMeta fireworkMeta = firework.getFireworkMeta();
                 fireworkMeta.setPower(plugin.getConfigHandler().getInteger("Firework.Power"));
@@ -194,8 +194,8 @@ public class CountdownModule {
                 firework.detonate();
             }
         }
-        if(plugin.getConfigHandler().getBoolean("Firework.AtEachBlock")){
-            for(Block block : getCubicSettings().getCube().blockList(true)){
+        if (plugin.getConfigHandler().getBoolean("Firework.AtEachBlock")) {
+            for (Block block : getCubicSettings().getCube().blockList(true)) {
                 Firework firework = (Firework) block.getLocation().getWorld().spawnEntity(block.getLocation(), EntityType.FIREWORK);
                 FireworkMeta fireworkMeta = firework.getFireworkMeta();
                 fireworkMeta.setPower(plugin.getConfigHandler().getInteger("Firework.Power"));

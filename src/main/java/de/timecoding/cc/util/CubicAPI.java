@@ -25,6 +25,9 @@ public class CubicAPI {
     private HashMap<String, Integer> fillAnimationList = new HashMap<>();
     private HashMap<String, Integer> clearAnimationList = new HashMap<>();
     private int actionRunnable = -1;
+    private HashMap<String, Integer> session_wins = new HashMap<>();
+    private HashMap<String, Integer> session_loses = new HashMap<>();
+    private HashMap<String, Integer> session_helps = new HashMap<>();
 
     public CubicAPI(CubicCountdown plugin) {
         this.plugin = plugin;
@@ -77,7 +80,7 @@ public class CubicAPI {
         return clearAnimationList;
     }
 
-    public String replaceWithPlaceholders(Cube cube, String title){
+    public String replaceWithPlaceholders(Cube cube, String title) {
         return title.replaceAll("%total_win_counter%", plugin.getCubicAPI().getTotalWins(cube).toString())
                 .replaceAll("%total_lose_counter%", plugin.getCubicAPI().getTotalLoses(cube).toString())
                 .replaceAll("%total_games_played%", plugin.getCubicAPI().getTotalGamesPlayed(cube).toString())
@@ -104,10 +107,10 @@ public class CubicAPI {
         return cubeList;
     }
 
-    public Cube getCubeAtLocation(Location location){
-        for(Cube cube : getCubes()){
-            for(Block block : cube.blockList(true)){
-                if(location.equals(block.getLocation())){
+    public Cube getCubeAtLocation(Location location) {
+        for (Cube cube : getCubes()) {
+            for (Block block : cube.blockList(true)) {
+                if (location.equals(block.getLocation())) {
                     return cube;
                 }
             }
@@ -224,16 +227,12 @@ public class CubicAPI {
         plugin.getDataHandler().save();
     }
 
-    private HashMap<String, Integer> session_wins = new HashMap<>();
-    private HashMap<String, Integer> session_loses =  new HashMap<>();
-    private HashMap<String, Integer> session_helps =  new HashMap<>();
-
     public Integer getSessionWins(Cube cube) {
         return getSessionWins(cube.getName());
     }
 
     public Integer getSessionWins(String cube) {
-        if(session_wins.containsKey(cube)){
+        if (session_wins.containsKey(cube)) {
             return session_wins.get(cube);
         }
         return 0;
@@ -242,7 +241,7 @@ public class CubicAPI {
     public void increaseSessionWins(Cube cube) {
         Integer integer = 1;
         if (session_wins.containsKey(cube.getName())) {
-            integer = session_wins.get(cube.getName())+1;
+            integer = session_wins.get(cube.getName()) + 1;
         }
         session_wins.put(cube.getName(), (integer));
     }
@@ -252,7 +251,7 @@ public class CubicAPI {
     }
 
     public Integer getSessionHelps(String cube) {
-        if(session_helps.containsKey(cube)){
+        if (session_helps.containsKey(cube)) {
             return session_helps.get(cube);
         }
         return 0;
@@ -261,7 +260,7 @@ public class CubicAPI {
     public void increaseSessionHelps(Cube cube) {
         Integer integer = 1;
         if (session_helps.containsKey(cube.getName())) {
-            integer = session_helps.get(cube.getName())+1;
+            integer = session_helps.get(cube.getName()) + 1;
         }
         session_helps.put(cube.getName(), (integer));
     }
@@ -271,7 +270,7 @@ public class CubicAPI {
     }
 
     public Integer getSessionLoses(String cube) {
-        if(session_loses.containsKey(cube)){
+        if (session_loses.containsKey(cube)) {
             return session_loses.get(cube);
         }
         return 0;
@@ -280,7 +279,7 @@ public class CubicAPI {
     public void increaseSessionLoses(Cube cube) {
         Integer integer = 1;
         if (session_loses.containsKey(cube.getName())) {
-            integer = session_loses.get(cube.getName())+1;
+            integer = session_loses.get(cube.getName()) + 1;
         }
         session_loses.put(cube.getName(), (integer));
     }
@@ -293,17 +292,17 @@ public class CubicAPI {
         return (getSessionWins(cube) + getSessionLoses(cube));
     }
 
-    public void increaseWins(Cube cube){
+    public void increaseWins(Cube cube) {
         increaseTotalWins(cube);
         increaseSessionWins(cube);
     }
 
-    public void increaseLoses(Cube cube){
+    public void increaseLoses(Cube cube) {
         increaseTotalLoses(cube);
         increaseSessionLoses(cube);
     }
 
-    public void increaseHelpCounter(Cube cube){
+    public void increaseHelpCounter(Cube cube) {
         increaseTotalHelps(cube);
         increaseSessionHelps(cube);
     }

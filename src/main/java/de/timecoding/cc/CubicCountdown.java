@@ -11,18 +11,11 @@ import de.timecoding.cc.file.DataHandler;
 import de.timecoding.cc.listener.CubicListener;
 import de.timecoding.cc.util.CountdownModule;
 import de.timecoding.cc.util.CubicAPI;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 

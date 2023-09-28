@@ -19,14 +19,14 @@ public class AutoUpdater {
     private final CubicCountdown plugin;
     private final String downloadBase = "https://github.com/TimeCodings/CubicCountdown/releases/download/";
     private final String pluginVersion;
-    private boolean autoUpdaterEnabled = true;
     private final String newestPluginVersion;
     private final boolean sent = false;
+    private boolean autoUpdaterEnabled = true;
 
     public AutoUpdater(CubicCountdown plugin, String newestPluginVersion) {
         this.plugin = plugin;
         this.pluginVersion = plugin.getDescription().getVersion();
-        if(this.plugin.getConfigHandler().keyExists("AutoUpdater")) {
+        if (this.plugin.getConfigHandler().keyExists("AutoUpdater")) {
             this.autoUpdaterEnabled = this.plugin.getConfigHandler().getBoolean("AutoUpdater");
         }
         this.newestPluginVersion = newestPluginVersion;
@@ -41,9 +41,9 @@ public class AutoUpdater {
             request.addHeader("content-type", "application/vnd.github.v3+json");
             HttpResponse result = httpClient.execute(request);
             JSONObject json = new JSONObject(EntityUtils.toString(result.getEntity(), "UTF-8"));
-            if(json != null && json.has("tag_name")){
+            if (json != null && json.has("tag_name")) {
                 return json.get("tag_name").toString();
-            }else{
+            } else {
                 Bukkit.getConsoleSender().sendMessage("§cCould not fetch the newest §eCubicCountdown §crelease! You may be offline!");
             }
         } catch (IOException ex) {
@@ -69,7 +69,7 @@ public class AutoUpdater {
                     }
                 });
             } else {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Update found (" + getNewestPluginVersion() + ")! You can download it here: "+ChatColor.YELLOW+this.downloadBase + ""+getNewestPluginVersion()+"/CubicCountdown.jar");
+                Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Update found (" + getNewestPluginVersion() + ")! You can download it here: " + ChatColor.YELLOW + this.downloadBase + "" + getNewestPluginVersion() + "/CubicCountdown.jar");
             }
         } else {
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "No update found! You're running the latest version (v" + pluginVersion + ")");
@@ -78,7 +78,7 @@ public class AutoUpdater {
 
     private boolean downloadUpdate() {
         try {
-            URL download = new URL(this.downloadBase+getNewestPluginVersion()+"/CubicCountdown.jar?timestamp=" + System.currentTimeMillis());
+            URL download = new URL(this.downloadBase + getNewestPluginVersion() + "/CubicCountdown.jar?timestamp=" + System.currentTimeMillis());
             BufferedInputStream in = null;
             FileOutputStream fout = null;
             BufferedOutputStream bout = null;

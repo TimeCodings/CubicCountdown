@@ -18,17 +18,22 @@ Setup is very easy! Once the plugin is installed, run the **/cc setup** command 
 **Commands:**
 <br> /cubiccountdown **setup** - Starts the setup process in which 5 simple steps must be followed to add a cube (MAIN
 COMMAND)
-<br> /cubiccountdown **fill MAPNAME BLOCKTYPE1,BLOCKTYPE2,... AMOUNT1,AMOUNT2,...** - Fills the cube with an specific amount of specific blocks
+<br> /cubiccountdown **fill MAPNAME BLOCKTYPE1,BLOCKTYPE2,... AMOUNT1,AMOUNT2,...** - Fills the cube with an specific
+amount of specific blocks
 <br> /cubiccountdown **clear MAPNAME** - Clears the whole area inside the provided cube
 <br> /cubiccountdown **cancel MAPNAME** - Cancels a running countdown of a map
 <br> /cubiccountdown **delete MAPNAME** - Deletes an existing cube (which was created before with /cc setup)
 <br> /cubiccountdown **reload** - Reloads the Config and data files
 <br> /cubiccountdown **cubes** - Shows you all the cubes which you already created
 <br> /cubiccountdown **help** - Opens the help menu
-<br> /cubiccountdown **setEntry CONFIGKEY CONFIGVALUE** - With this command you are able to edit config entries easily without opening a file so it's easier for me to help people out on my discord. **Important:** Don't use this command if you don't know what you're doing
+<br> /cubiccountdown **setEntry CONFIGKEY CONFIGVALUE** - With this command you are able to edit config entries easily
+without opening a file so it's easier for me to help people out on my discord. **Important:** Don't use this command if
+you don't know what you're doing
 
 **PlaceholderAPI Support:**
-<br>You want to use the CubicCountdown statistics (like the wins, loses or games played) in another plugin (like a scoreboard plugin)? Now it is possible! If you're using a plugin which supports the PlaceholderAPI (the PlaceholderAPI plugin needs to be installed too), you're now able to use these placeholders in it:
+<br>You want to use the CubicCountdown statistics (like the wins, loses or games played) in another plugin (like a
+scoreboard plugin)? Now it is possible! If you're using a plugin which supports the PlaceholderAPI (the PlaceholderAPI
+plugin needs to be installed too), you're now able to use these placeholders in it:
 <br>
 <br>*Show the number of total wins on a specific cube/map:* **%cc_total_win_counter_MAPNAME%**
 <br>*Show the number of session wins on a specific cube/map:* **%cc_session_win_counter_MAPNAME%**
@@ -39,7 +44,8 @@ COMMAND)
 <br>*Show the number of total helps on a specific cube/map:* **%cc_total_help_counter_MAPNAME%**
 <br>*Show the number of session helps on a specific cube/map:* **%cc_session_help_counter_MAPNAME%**
 <br>
-<br>**By the way:** If you're using version 1.2.0 or higher, you're also able to use placeholders from other plugins in the titles of the CubicCountdown plugin
+<br>**By the way:** If you're using version 1.2.0 or higher, you're also able to use placeholders from other plugins in
+the titles of the CubicCountdown plugin
 
 **QAndA:**
 <br>**Q:** *Help! The plugin says that I do not have the permission to use the plugin commands!*
@@ -62,7 +68,8 @@ from the releases tab to the build path of your project (in your IDEA). After th
 <br>Spanish Tutorial by thanitoASMR: https://www.youtube.com/watch?v=CkP_1YHGhW8
 
 **Support:** <br>
-You got any wishes or found any bug? Feel free to join my discord or open an issue on this github page: https://discord.tikmc.de/
+You got any wishes or found any bug? Feel free to join my discord or open an issue on this github
+page: https://discord.tikmc.de/
 
 **License:** <br>
 The source code as well as the JAR file may be used and modified for commercial as well as private

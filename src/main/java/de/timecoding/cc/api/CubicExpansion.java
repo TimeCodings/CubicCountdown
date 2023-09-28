@@ -62,7 +62,7 @@ public class CubicExpansion extends PlaceholderExpansion {
             } else {
                 return null;
             }
-        }else if (params.startsWith("session_win_counter_")) {
+        } else if (params.startsWith("session_win_counter_")) {
             String cubeName = params.substring(20);
             if (plugin.getCubicAPI().cubeNameExists(cubeName)) {
                 return plugin.getCubicAPI().getSessionWins(cubeName).toString();

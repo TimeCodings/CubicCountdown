@@ -78,7 +78,7 @@ public class CubicSetup implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getPlayer().equals(player)) {
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
-                if(event.getHand() == EquipmentSlot.HAND) {
+                if (event.getHand() == EquipmentSlot.HAND) {
                     event.setCancelled(true);
                     if (step == 1) {
                         player.sendMessage("§aEdge 1 was set! §7You made a mistake? Just type §cCANCEL §7into the chat");

@@ -102,32 +102,32 @@ public class Cube {
         }
     }
 
-    public int getLowestY(){
+    public int getLowestY() {
         AtomicInteger lowest = new AtomicInteger(100000000);
         blockList(true).forEach(block -> {
-            if(block.getY() < lowest.get()){
+            if (block.getY() < lowest.get()) {
                 lowest.set(block.getY());
             }
         });
         return lowest.get();
     }
 
-    public int height(){
+    public int height() {
         List<Block> blockList = blockList(true);
         List<Integer> yValues = new ArrayList<>();
         blockList.forEach(block -> {
-            if(!yValues.contains(block.getLocation().getBlockY())){
+            if (!yValues.contains(block.getLocation().getBlockY())) {
                 yValues.add(block.getLocation().getBlockY());
             }
         });
         return yValues.size();
     }
 
-    public int currentHeight(){
+    public int currentHeight() {
         List<Block> blockList = blockList(false);
         List<Integer> yValues = new ArrayList<>();
         blockList.forEach(block -> {
-            if(!yValues.contains(block.getLocation().getBlockY())){
+            if (!yValues.contains(block.getLocation().getBlockY())) {
                 yValues.add(block.getLocation().getBlockY());
             }
         });

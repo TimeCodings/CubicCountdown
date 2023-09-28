@@ -175,7 +175,7 @@ public class CubicCommand implements CommandExecutor {
                 } else {
                     commandSender.sendMessage("§cUnknown command! Type §e/cc help §cto look up all commands!");
                 }
-            }else if (strings.length >= 3 && strings[0].equalsIgnoreCase("setEntry") || strings.length >= 3 && strings[0].equalsIgnoreCase("set")) {
+            } else if (strings.length >= 3 && strings[0].equalsIgnoreCase("setEntry") || strings.length >= 3 && strings[0].equalsIgnoreCase("set")) {
                 String entry = strings[2];
                 for (int i = 3; i < strings.length; i++) {
                     entry = entry + " " + strings[i];
@@ -236,7 +236,7 @@ public class CubicCommand implements CommandExecutor {
                 } else {
                     commandSender.sendMessage("§cThe map §e" + map + " §cdoes not exist! You can create it with §e/cc setup");
                 }
-            }else if (strings.length == 4) {
+            } else if (strings.length == 4) {
                 if (strings[0].equalsIgnoreCase("fill")) {
                     String cubeName = strings[1].toUpperCase();
                     if (plugin.getCubicAPI().cubeNameExists(cubeName)) {
@@ -430,9 +430,9 @@ public class CubicCommand implements CommandExecutor {
             } else {
                 commandSender.sendMessage("§cUnknown command! Type §e/cc help §cto look up all commands!");
             }
-        } else{
-        commandSender.sendMessage("§cYou do not have the permission to use that command! §cType §eop " + commandSender.getName() + " §cinto the server-console to get permission!");
-    }
+        } else {
+            commandSender.sendMessage("§cYou do not have the permission to use that command! §cType §eop " + commandSender.getName() + " §cinto the server-console to get permission!");
+        }
         return false;
     }
 
@@ -461,17 +461,17 @@ public class CubicCommand implements CommandExecutor {
         return (toTest.equals("true") || toTest.equals("false"));
     }
 
-    private boolean isStringList(String toTest){
+    private boolean isStringList(String toTest) {
         return toTest.split(",").length > 1;
     }
 
-    private List<String> toStringList(String to){
+    private List<String> toStringList(String to) {
         String[] split = to.split(",");
-        if(split[0].startsWith("[")){
+        if (split[0].startsWith("[")) {
             split[0] = split[0].substring(1, split[0].length());
         }
-        if(split[split.length-1].endsWith("]")){
-            split[split.length-1] = split[split.length-1].substring(0, split[split.length-1].length()-1);
+        if (split[split.length - 1].endsWith("]")) {
+            split[split.length - 1] = split[split.length - 1].substring(0, split[split.length - 1].length() - 1);
         }
         return Arrays.stream(split).collect(Collectors.toList());
     }
