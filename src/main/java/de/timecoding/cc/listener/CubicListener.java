@@ -66,7 +66,10 @@ public class CubicListener implements Listener {
                 if (command.startsWith(" ") || command.startsWith("/")) {
                     command = command.substring(0, command.length() - 1);
                 }
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%map%", map));
+                Cube cube = plugin.getCubicAPI().getCubeByName(map);
+                if(cube != null) {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), plugin.getCubicAPI().replaceWithPlaceholders(cube, command));
+                }
             }
         });
     }

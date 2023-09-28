@@ -1,5 +1,5 @@
 name: CubicCountdown
-version: 1.2.2_BETA
+version: 1.2.3_BETA
 main: de.timecoding.cc.CubicCountdown
 api-version: 1.13
 softdepend: [ PlaceholderAPI ]

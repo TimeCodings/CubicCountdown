@@ -1,13 +1,11 @@
 package de.timecoding.cc.util.type;
 
 import de.timecoding.cc.CubicCountdown;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -102,6 +100,38 @@ public class Cube {
         } else {
             return blockList(true).stream().noneMatch(block -> block == null || block.getType() == Material.AIR);
         }
+    }
+
+    public int getLowestY(){
+        AtomicInteger lowest = new AtomicInteger(100000000);
+        blockList(true).forEach(block -> {
+            if(block.getY() < lowest.get()){
+                lowest.set(block.getY());
+            }
+        });
+        return lowest.get();
+    }
+
+    public int height(){
+        List<Block> blockList = blockList(true);
+        List<Integer> yValues = new ArrayList<>();
+        blockList.forEach(block -> {
+            if(!yValues.contains(block.getLocation().getBlockY())){
+                yValues.add(block.getLocation().getBlockY());
+            }
+        });
+        return yValues.size();
+    }
+
+    public int currentHeight(){
+        List<Block> blockList = blockList(false);
+        List<Integer> yValues = new ArrayList<>();
+        blockList.forEach(block -> {
+            if(!yValues.contains(block.getLocation().getBlockY())){
+                yValues.add(block.getLocation().getBlockY());
+            }
+        });
+        return yValues.size();
     }
 
     public boolean empty() {

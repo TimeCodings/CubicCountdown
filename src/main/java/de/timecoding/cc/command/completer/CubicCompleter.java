@@ -32,6 +32,7 @@ public class CubicCompleter implements TabCompleter {
                 complete.add("fill");
                 complete.add("clear");
                 complete.add("cubes");
+                complete.add("simulate");
                 complete.add("setEntry");
                 complete.add("help");
                 if(strings[0].length() > 0) {
@@ -54,6 +55,25 @@ public class CubicCompleter implements TabCompleter {
                             completer.add(string);
                         }
                     });
+                    plugin.getDataHandler().getConfig().getKeys(true).forEach(string -> {
+                        if(string.length() > 0 && string.contains(strings[1]) || strings[1].length() == 0){
+                            completer.add(string);
+                        }
+                    });
+                }else if(strings[0].equalsIgnoreCase("simulate")){
+                    complete.clear();
+                    complete.add("win");
+                    complete.add("lose");
+                    complete.add("help");
+                    if(strings[1].length() > 0) {
+                        complete.forEach(s1 -> {
+                            if (s1.contains(strings[0])) {
+                                completer.add(s1);
+                            }
+                        });
+                    }else{
+                        completer.addAll(complete);
+                    }
                 }
             } else if (strings.length == 3) {
                 if (strings[0].equalsIgnoreCase("fill")) {
@@ -76,6 +96,10 @@ public class CubicCompleter implements TabCompleter {
                 } else if (strings[0].equalsIgnoreCase("setEntry") || strings[0].equalsIgnoreCase("set")) {
                     if (plugin.getConfigHandler().keyExists(strings[1])) {
                         completer.add(plugin.getConfigHandler().getConfig().get(strings[1]).toString());
+                    }
+                }else if(strings[0].equalsIgnoreCase("simulate")){
+                    if(strings[1].equalsIgnoreCase("win") || strings[1].equalsIgnoreCase("lose") || strings[1].equalsIgnoreCase("help")){
+                        plugin.getCubicAPI().getCubes().forEach(cube -> completer.add(cube.getName()));
                     }
                 }
             } else if (strings.length == 4) {

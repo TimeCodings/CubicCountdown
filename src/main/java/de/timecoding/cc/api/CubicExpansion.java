@@ -90,7 +90,33 @@ public class CubicExpansion extends PlaceholderExpansion {
             } else {
                 return null;
             }
+        } else if (params.startsWith("cube_height_")) {
+            String cubeName = params.substring(12);
+            if (plugin.getCubicAPI().cubeNameExists(cubeName)) {
+                return String.valueOf(plugin.getCubicAPI().getCubeByName(cubeName).height());
+            } else {
+                return null;
+            }
+        } else if (params.startsWith("cube_current_height_")) {
+            String cubeName = params.substring(20);
+            if (plugin.getCubicAPI().cubeNameExists(cubeName)) {
+                return String.valueOf(plugin.getCubicAPI().getCubeByName(cubeName).currentHeight());
+            } else {
+                return null;
+            }
         }
         return null;
+    }
+
+    private boolean isInteger(String toTest) {
+        try {
+            Integer.parseInt(toTest);
+            if (Integer.parseInt(toTest) <= 0) {
+                return false;
+            }
+            return true;
+        } catch (NumberFormatException exception) {
+            return false;
+        }
     }
 }

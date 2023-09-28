@@ -86,6 +86,8 @@ public class CubicAPI {
                 .replaceAll("%session_lose_counter%", plugin.getCubicAPI().getSessionLoses(cube).toString())
                 .replaceAll("%session_games_played%", plugin.getCubicAPI().getSessionGamesPlayed(cube).toString())
                 .replaceAll("%session_help_counter%", plugin.getCubicAPI().getSessionHelps(cube).toString())
+                .replaceAll("%cube_height%", String.valueOf(cube.height()))
+                .replaceAll("%cube_current_height%", String.valueOf(cube.currentHeight()))
                 .replaceAll("%map%", cube.getName());
     }
 
