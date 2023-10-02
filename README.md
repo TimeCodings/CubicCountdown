@@ -26,6 +26,7 @@ amount of specific blocks
 <br> /cubiccountdown **reload** - Reloads the Config and data files
 <br> /cubiccountdown **cubes** - Shows you all the cubes which you already created
 <br> /cubiccountdown **help** - Opens the help menu
+<br> /cubiccountdown **simulate win/lose/help MAPNAME** - Simulates a win/lose/help
 <br> /cubiccountdown **setEntry CONFIGKEY CONFIGVALUE** - With this command you are able to edit config entries easily
 without opening a file so it's easier for me to help people out on my discord. **Important:** Don't use this command if
 you don't know what you're doing
@@ -43,6 +44,8 @@ plugin needs to be installed too), you're now able to use these placeholders in 
 <br>*Show the number of session games played on a specific cube/map:* **%cc_session_games_played_MAPNAME%**
 <br>*Show the number of total helps on a specific cube/map:* **%cc_total_help_counter_MAPNAME%**
 <br>*Show the number of session helps on a specific cube/map:* **%cc_session_help_counter_MAPNAME%**
+<br>*Show the current cube height:* **%cc_current_cube_height_MAPNAME%**
+<br>*Show the cube height:* **%cc_cube_height_MAPNAME%**
 <br>
 <br>**By the way:** If you're using version 1.2.0 or higher, you're also able to use placeholders from other plugins in
 the titles of the CubicCountdown plugin
