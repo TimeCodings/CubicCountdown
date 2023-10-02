@@ -74,10 +74,10 @@ public class CountdownModule {
                                 } else {
                                     player.playSound(player.getLocation(), plugin.getConfigHandler().getString(base + "Sound.Custom"), (float) plugin.getConfigHandler().getConfig().getDouble(base + ".Sound.Volume"), (float) plugin.getConfigHandler().getConfig().getDouble(base + ".Sound.Pitch"));
                                 }
-                                if (plugin.getConfigHandler().keyExists(base + "Ticks")) {
-                                    extraTicks(base);
-                                }
                             });
+                            if (plugin.getConfigHandler().keyExists(base + "Ticks")) {
+                                extraTicks(base);
+                            }
                         } else {
                             sendTitle(cubicSettings.getTitle(CubicStateType.PROCEED).replace("%seconds%", String.valueOf(seconds)), cubicSettings.getSubtitle(CubicStateType.PROCEED));
                             playSound(CubicStateType.PROCEED);
